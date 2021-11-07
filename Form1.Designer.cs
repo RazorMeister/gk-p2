@@ -61,6 +61,8 @@ namespace GK_P2
             this.kLabel = new System.Windows.Forms.Label();
             this.kTrackBar = new System.Windows.Forms.TrackBar();
             this.loadTextureButton = new System.Windows.Forms.Button();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.editModeCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.wrapper)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.densityTrackBar)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -78,6 +80,7 @@ namespace GK_P2
             ((System.ComponentModel.ISupportInitialize)(this.textureNormalMapPreviewWrapper)).BeginInit();
             this.groupBox9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kTrackBar)).BeginInit();
+            this.groupBox10.SuspendLayout();
             this.SuspendLayout();
             // 
             // wrapper
@@ -88,6 +91,9 @@ namespace GK_P2
             this.wrapper.TabIndex = 0;
             this.wrapper.TabStop = false;
             this.wrapper.Paint += new System.Windows.Forms.PaintEventHandler(this.wrapper_Paint);
+            this.wrapper.MouseDown += new System.Windows.Forms.MouseEventHandler(this.wrapper_MouseDown);
+            this.wrapper.MouseMove += new System.Windows.Forms.MouseEventHandler(this.wrapper_MouseMove);
+            this.wrapper.MouseUp += new System.Windows.Forms.MouseEventHandler(this.wrapper_MouseUp);
             // 
             // lightZTextBox
             // 
@@ -111,7 +117,7 @@ namespace GK_P2
             // densityTrackBar
             // 
             this.densityTrackBar.Location = new System.Drawing.Point(6, 19);
-            this.densityTrackBar.Maximum = 5;
+            this.densityTrackBar.Maximum = 8;
             this.densityTrackBar.Name = "densityTrackBar";
             this.densityTrackBar.Size = new System.Drawing.Size(104, 45);
             this.densityTrackBar.TabIndex = 8;
@@ -436,11 +442,33 @@ namespace GK_P2
             this.loadTextureButton.UseVisualStyleBackColor = true;
             this.loadTextureButton.Click += new System.EventHandler(this.loadTextureButton_Click);
             // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.editModeCheckbox);
+            this.groupBox10.Location = new System.Drawing.Point(674, 384);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(114, 86);
+            this.groupBox10.TabIndex = 19;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Edit mode";
+            // 
+            // editModeCheckbox
+            // 
+            this.editModeCheckbox.AutoSize = true;
+            this.editModeCheckbox.Location = new System.Drawing.Point(12, 38);
+            this.editModeCheckbox.Name = "editModeCheckbox";
+            this.editModeCheckbox.Size = new System.Drawing.Size(88, 17);
+            this.editModeCheckbox.TabIndex = 0;
+            this.editModeCheckbox.Text = "Edit mode on";
+            this.editModeCheckbox.UseVisualStyleBackColor = true;
+            this.editModeCheckbox.CheckedChanged += new System.EventHandler(this.editModeCheckbox_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(934, 546);
+            this.Controls.Add(this.groupBox10);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.debugPanelLabel);
@@ -453,6 +481,7 @@ namespace GK_P2
             this.Controls.Add(this.wrapper);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.wrapper)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.densityTrackBar)).EndInit();
             this.groupBox1.ResumeLayout(false);
@@ -477,6 +506,8 @@ namespace GK_P2
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kTrackBar)).EndInit();
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox10.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -516,6 +547,8 @@ namespace GK_P2
         private System.Windows.Forms.Label kLabel;
         private System.Windows.Forms.TrackBar kTrackBar;
         private System.Windows.Forms.Button loadTextureButton;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.CheckBox editModeCheckbox;
     }
 }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using GK_P2.Bitmap;
@@ -7,7 +8,7 @@ namespace GK_P2.Filler
 {
     class Filler
     {
-        public static void FillPolygon(List<Point> points, Color color, FastBitmap bm)
+        public static void FillPolygon(List<Point> points, Color color, FastBitmap bm, Func<int, int, Color> getColorFunc = null)
         {
             List<int> ind;
             int yMin, yMax;
@@ -55,7 +56,8 @@ namespace GK_P2.Filler
                     int xMax = (int)AET[i + 1].x;
 
                     for (int x = xMin; x <= xMax; x++)
-                        bm.SetPixel(x, y, color);
+                        bm.SetPixel(x, y, getColorFunc != null ? getColorFunc(x, y) : color);
+
                 }
 
                 // Uaktualnienie wartości x dla nowej scanlinii

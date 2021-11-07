@@ -21,6 +21,8 @@ namespace GK_P2.Shape
 
         public int GetTrianglesCount() => this.triangleList.Count;
 
+        public List<Triangle> GeTriangles() => this.triangleList;
+
         public void Draw(PaintEventArgs e, FastBitmap bm, Point light)
         {
             this.triangleList.ForEach(triangle => triangle.Draw(e, bm, light));
@@ -55,6 +57,8 @@ namespace GK_P2.Shape
                 tr.Point2 = p2;
                 tr.Point3 = p3;
                 tr.Normal = trlist[i].Normal;
+                tr.SetMidPoint();
+
                 this.triangleList.Add(tr);
             }
         }
@@ -97,7 +101,7 @@ namespace GK_P2.Shape
                     t2.Point1 = pointList[n_tita, (n_phi + 1) % pointList.GetLength(1)];
                     t2.Point2 = pointList[n_tita - 1, (n_phi + 1) % pointList.GetLength(1)];
                     t2.Point3 = pointList[n_tita - 1, n_phi];
-                    t2.Normal = new Vector3d() { X = t1.Point1.X, Y = t1.Point1.Y, Z = t1.Point1.Z };
+                    t2.Normal = new Vector3d() { X = t2.Point1.X, Y = t2.Point1.Y, Z = t2.Point1.Z };
 
                     toReturn.Add(t1);
                     toReturn.Add(t2);

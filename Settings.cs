@@ -20,6 +20,8 @@ namespace GK_P2
             TEXTURE
         }
 
+        public static bool EditMode { get; set; } = false;
+
         /* Sphere settings */
         public static int SphereDensity { get; set; } = 45;
         public static ObjectFillTypeEnum ObjectFillType { get; set; } = ObjectFillTypeEnum.TEXTURE;

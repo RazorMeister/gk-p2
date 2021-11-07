@@ -25,6 +25,9 @@ namespace GK_P2
 
         private Thread loadTextureThread;
 
+        private Triangle movingTriangle;
+        private Point lastMovingPoint;
+
         public Form1()
         {
             InitializeComponent();
@@ -46,7 +49,7 @@ namespace GK_P2
         private async void LoadTextureHelper(string texturePath)
         {
             var image = texturePath != null ? (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile(texturePath) : Resources.defaultTexture;
-            var normalMap = NormalMap.Make(image, 4.0);
+            var normalMap = NormalMap.Make(image, 1.0);
             
             this.textureNormalMapPreviewWrapper.Image = normalMap;
             this.texturePreviewWrapper.Image = image;
@@ -328,6 +331,80 @@ namespace GK_P2
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                     this.LoadTexture(openFileDialog.FileName);
             });
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (this.loadTextureThread != null && this.loadTextureThread.IsAlive)
+                this.loadTextureThread.Abort();
+        }
+
+        private void editModeCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.EditMode = this.editModeCheckbox.Checked;
+
+            if (Settings.EditMode)
+            {
+                Settings.LightAnimationOn = false;
+                this.lightAnimationButton.BackColor = Color.WhiteSmoke;
+                this.lightAnimationButton.Text = "Animation OFF";
+                this.withLightButton.Enabled = false;
+
+                Settings.WithLight = false;
+                this.withLightButton.BackColor = Color.WhiteSmoke;
+                this.withLightButton.Text = "Light OFF";
+                this.lightAnimationButton.Enabled = false;
+            }
+            else
+            {
+                this.withLightButton.Enabled = true;
+            }
+
+            this.wrapper.Invalidate();
+        }
+
+        private void wrapper_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (!Settings.EditMode) return;
+
+            var triangles = this.sphere.GeTriangles();
+            this.lastMovingPoint = e.Location;
+
+            foreach (var triangle in triangles)
+            {
+                var nearestPoint = triangle.GetNearestPoint(e.Location);
+
+                if (nearestPoint != null)
+                {
+                    triangle.SelectedPoint = nearestPoint;
+                    this.movingTriangle = triangle;
+                    break;
+                }
+            }
+        }
+
+        private void wrapper_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (this.movingTriangle == null) return;
+
+            int dX = e.Location.X - this.lastMovingPoint.X;
+            int dY = e.Location.Y - this.lastMovingPoint.Y;
+
+            this.movingTriangle.SelectedPoint.X += dX;
+            this.movingTriangle.SelectedPoint.Y += dY;
+            this.movingTriangle.SetMidPoint();
+
+            this.lastMovingPoint = e.Location;
+
+            this.wrapper.Invalidate();
+        }
+
+        private void wrapper_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (this.movingTriangle != null)
+                this.movingTriangle.SelectedPoint = null;
+
+            this.movingTriangle = null;
         }
     }
 }
