@@ -31,6 +31,11 @@ namespace GK_P2.Shape
             return new Vector3d() { X = a.X * multiplier, Y = a.Y * multiplier, Z = a.Z * multiplier };
         }
 
+        public static Vector3d operator *(double multiplier, Vector3d a)
+        {
+            return a * multiplier;
+        }
+
         public static Vector3d operator -(Vector3d a, Vector3d b)
         {
             return new Vector3d() { X = a.X - b.X, Y = a.Y - b.Y, Z = a.Z - b.Z };

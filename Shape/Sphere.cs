@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using GK_P2.Bitmap;
 
 namespace GK_P2.Shape
 {
@@ -20,9 +21,9 @@ namespace GK_P2.Shape
 
         public int GetTrianglesCount() => this.triangleList.Count;
 
-        public void Draw(PaintEventArgs e, Point light)
+        public void Draw(PaintEventArgs e, FastBitmap bm, Point light)
         {
-            this.triangleList.ForEach(triangle => triangle.Draw(e, light));
+            this.triangleList.ForEach(triangle => triangle.Draw(e, bm, light));
         }
 
         public void Triangulate()
