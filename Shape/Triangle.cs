@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GK_P2.Shape
@@ -30,7 +25,7 @@ namespace GK_P2.Shape
 
         private Color GetFillColor(Point light)
         {
-            int[] lightColor = new int[] { 255, 255, 255 };
+            int[] lightColor = new int[] { Settings.LightColor.R, Settings.LightColor.G, Settings.LightColor.B };
             int[] objectColor = new int[] { 200, 100, 120 };
             //int[] objectColor = new int[] { 80, 170, 120 };
 

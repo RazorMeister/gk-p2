@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GK_P2.Shape
@@ -87,18 +83,18 @@ namespace GK_P2.Shape
 
             for (int n_tita = 1; n_tita <= pointList.GetLength(0) - 1; n_tita++)
             {
-                for (int n_phi = 0; n_phi <= pointList.GetLength(1) - 2; n_phi++)
+                for (int n_phi = 0; n_phi <= pointList.GetLength(1) - 1; n_phi++)
                 {
                     Triangle t1 = new Triangle();
                     Triangle t2 = new Triangle();
 
                     t1.Point1 = pointList[n_tita, n_phi];
-                    t1.Point2 = pointList[n_tita, n_phi + 1];
+                    t1.Point2 = pointList[n_tita, (n_phi + 1) % pointList.GetLength(1)];
                     t1.Point3 = pointList[n_tita - 1, n_phi];
                     t1.Normal = new Vector3d() { X = t1.Point1.X, Y = t1.Point1.Y, Z = t1.Point1.Z };
 
-                    t2.Point1 = pointList[n_tita, n_phi + 1];
-                    t2.Point2 = pointList[n_tita - 1, n_phi + 1];
+                    t2.Point1 = pointList[n_tita, (n_phi + 1) % pointList.GetLength(1)];
+                    t2.Point2 = pointList[n_tita - 1, (n_phi + 1) % pointList.GetLength(1)];
                     t2.Point3 = pointList[n_tita - 1, n_phi];
                     t2.Normal = new Vector3d() { X = t1.Point1.X, Y = t1.Point1.Y, Z = t1.Point1.Z };
 
