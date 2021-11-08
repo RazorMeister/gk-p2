@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using GK_P2.Bitmap;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace GK_P2.Shape
 {
@@ -25,7 +27,11 @@ namespace GK_P2.Shape
 
         public void Draw(PaintEventArgs e, FastBitmap bm, Point light)
         {
-            this.triangleList.ForEach(triangle => triangle.Draw(e, bm, light));
+            Parallel.For(0, this.triangleList.Count - 1, num =>
+            {
+                this.triangleList[num].Draw(e, bm, light);
+            });
+            //this.triangleList.ForEach(triangle => triangle.Draw(e, bm, light));
         }
 
         public void Triangulate()

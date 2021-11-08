@@ -64,7 +64,7 @@ namespace GK_P2.Shape
                 e.Graphics.FillEllipse(Brushes.Black, new Rectangle((int)(this.Point3.X - 3), (int)(this.Point3.Y - 3), 6, 6));
             }
             else
-                Filler.Filler.FillPolygon(points, color, bm);
+                Filler.Filler.FillPolygon(points, color, bm, (x, y) => this.GetFillColorForPixel(light, x, y, this.MidPoint.Z));
         }
 
         private int[] GetObjectColor(double x, double y, double z)
@@ -117,7 +117,7 @@ namespace GK_P2.Shape
                 double iL = (double)lightColor[i] / 255;
                 double iO = (double)objectColor[i];
 
-                returnColor[i] = (int)(Settings.Kd * iL * iO * N.GetCos(L) + Settings.Ks * iL * iO * Math.Pow(V.GetCos(R), Settings.M));
+                returnColor[i] = (int)(Settings.Kd * iL * iO * Math.Max(N.GetCos(L), 0) + Settings.Ks * iL * iO * Math.Pow(V.GetCos(R), Settings.M));
 
                 returnColor[i] = Math.Min(255, returnColor[i]);
                 returnColor[i] = Math.Max(0, returnColor[i]);
