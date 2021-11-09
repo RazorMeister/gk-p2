@@ -46,23 +46,24 @@ namespace GK_P2
             this.mTrackBar = new System.Windows.Forms.TrackBar();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.withLightButton = new System.Windows.Forms.Button();
             this.lightAnimationButton = new System.Windows.Forms.Button();
             this.debugPanelLabel = new System.Windows.Forms.Label();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.lightColorButton = new System.Windows.Forms.Button();
             this.texturePreviewWrapper = new System.Windows.Forms.PictureBox();
-            this.withLightButton = new System.Windows.Forms.Button();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.objectSolidColorRadioButton = new System.Windows.Forms.RadioButton();
-            this.objectTextureRadioButton = new System.Windows.Forms.RadioButton();
-            this.objectSolidColorButton = new System.Windows.Forms.Button();
-            this.textureNormalMapPreviewWrapper = new System.Windows.Forms.PictureBox();
+            this.loadTextureButton = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.kLabel = new System.Windows.Forms.Label();
             this.kTrackBar = new System.Windows.Forms.TrackBar();
-            this.loadTextureButton = new System.Windows.Forms.Button();
+            this.textureNormalMapPreviewWrapper = new System.Windows.Forms.PictureBox();
+            this.objectSolidColorButton = new System.Windows.Forms.Button();
+            this.objectTextureRadioButton = new System.Windows.Forms.RadioButton();
+            this.objectSolidColorRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.editModeCheckbox = new System.Windows.Forms.CheckBox();
+            this.fpsLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.wrapper)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.densityTrackBar)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -77,17 +78,18 @@ namespace GK_P2
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.texturePreviewWrapper)).BeginInit();
             this.groupBox8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.textureNormalMapPreviewWrapper)).BeginInit();
             this.groupBox9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kTrackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textureNormalMapPreviewWrapper)).BeginInit();
             this.groupBox10.SuspendLayout();
             this.SuspendLayout();
             // 
             // wrapper
             // 
-            this.wrapper.Location = new System.Drawing.Point(12, 12);
+            this.wrapper.Location = new System.Drawing.Point(16, 15);
+            this.wrapper.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.wrapper.Name = "wrapper";
-            this.wrapper.Size = new System.Drawing.Size(500, 500);
+            this.wrapper.Size = new System.Drawing.Size(667, 615);
             this.wrapper.TabIndex = 0;
             this.wrapper.TabStop = false;
             this.wrapper.Paint += new System.Windows.Forms.PaintEventHandler(this.wrapper_Paint);
@@ -97,18 +99,20 @@ namespace GK_P2
             // 
             // lightZTextBox
             // 
-            this.lightZTextBox.Location = new System.Drawing.Point(22, 19);
+            this.lightZTextBox.Location = new System.Drawing.Point(29, 23);
+            this.lightZTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.lightZTextBox.Name = "lightZTextBox";
-            this.lightZTextBox.Size = new System.Drawing.Size(75, 20);
+            this.lightZTextBox.Size = new System.Drawing.Size(99, 22);
             this.lightZTextBox.TabIndex = 6;
             this.lightZTextBox.Text = "260";
             // 
             // button2
             // 
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Location = new System.Drawing.Point(22, 49);
+            this.button2.Location = new System.Drawing.Point(29, 60);
+            this.button2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.Size = new System.Drawing.Size(100, 28);
             this.button2.TabIndex = 7;
             this.button2.Text = "Set";
             this.button2.UseVisualStyleBackColor = true;
@@ -116,10 +120,11 @@ namespace GK_P2
             // 
             // densityTrackBar
             // 
-            this.densityTrackBar.Location = new System.Drawing.Point(6, 19);
+            this.densityTrackBar.Location = new System.Drawing.Point(8, 23);
+            this.densityTrackBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.densityTrackBar.Maximum = 8;
             this.densityTrackBar.Name = "densityTrackBar";
-            this.densityTrackBar.Size = new System.Drawing.Size(104, 45);
+            this.densityTrackBar.Size = new System.Drawing.Size(139, 56);
             this.densityTrackBar.TabIndex = 8;
             this.densityTrackBar.Value = 2;
             this.densityTrackBar.Scroll += new System.EventHandler(this.densityTrackBar_Scroll);
@@ -128,9 +133,11 @@ namespace GK_P2
             // 
             this.groupBox1.Controls.Add(this.sphereDensityLabel);
             this.groupBox1.Controls.Add(this.densityTrackBar);
-            this.groupBox1.Location = new System.Drawing.Point(530, 384);
+            this.groupBox1.Location = new System.Drawing.Point(707, 473);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(114, 86);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Size = new System.Drawing.Size(152, 106);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Sphere density";
@@ -140,9 +147,10 @@ namespace GK_P2
             this.sphereDensityLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.sphereDensityLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.sphereDensityLabel.Location = new System.Drawing.Point(6, 49);
+            this.sphereDensityLabel.Location = new System.Drawing.Point(8, 60);
+            this.sphereDensityLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.sphereDensityLabel.Name = "sphereDensityLabel";
-            this.sphereDensityLabel.Size = new System.Drawing.Size(102, 34);
+            this.sphereDensityLabel.Size = new System.Drawing.Size(136, 42);
             this.sphereDensityLabel.TabIndex = 9;
             this.sphereDensityLabel.Text = "2";
             this.sphereDensityLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -151,9 +159,11 @@ namespace GK_P2
             // 
             this.groupBox2.Controls.Add(this.ksLabel);
             this.groupBox2.Controls.Add(this.ksTrackBar);
-            this.groupBox2.Location = new System.Drawing.Point(674, 12);
+            this.groupBox2.Location = new System.Drawing.Point(899, 15);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(114, 86);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Size = new System.Drawing.Size(152, 106);
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Ks";
@@ -163,18 +173,20 @@ namespace GK_P2
             this.ksLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ksLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.ksLabel.Location = new System.Drawing.Point(6, 49);
+            this.ksLabel.Location = new System.Drawing.Point(8, 60);
+            this.ksLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.ksLabel.Name = "ksLabel";
-            this.ksLabel.Size = new System.Drawing.Size(102, 34);
+            this.ksLabel.Size = new System.Drawing.Size(136, 42);
             this.ksLabel.TabIndex = 10;
             this.ksLabel.Text = "0.5";
             this.ksLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ksTrackBar
             // 
-            this.ksTrackBar.Location = new System.Drawing.Point(6, 19);
+            this.ksTrackBar.Location = new System.Drawing.Point(8, 23);
+            this.ksTrackBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ksTrackBar.Name = "ksTrackBar";
-            this.ksTrackBar.Size = new System.Drawing.Size(104, 45);
+            this.ksTrackBar.Size = new System.Drawing.Size(139, 56);
             this.ksTrackBar.TabIndex = 8;
             this.ksTrackBar.Value = 5;
             this.ksTrackBar.Scroll += new System.EventHandler(this.ksTrackBar_Scroll);
@@ -183,9 +195,11 @@ namespace GK_P2
             // 
             this.groupBox3.Controls.Add(this.kdLabel);
             this.groupBox3.Controls.Add(this.kdTrackBar);
-            this.groupBox3.Location = new System.Drawing.Point(530, 12);
+            this.groupBox3.Location = new System.Drawing.Point(707, 15);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(114, 86);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox3.Size = new System.Drawing.Size(152, 106);
             this.groupBox3.TabIndex = 11;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Kd";
@@ -195,18 +209,20 @@ namespace GK_P2
             this.kdLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.kdLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.kdLabel.Location = new System.Drawing.Point(6, 49);
+            this.kdLabel.Location = new System.Drawing.Point(8, 60);
+            this.kdLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.kdLabel.Name = "kdLabel";
-            this.kdLabel.Size = new System.Drawing.Size(102, 34);
+            this.kdLabel.Size = new System.Drawing.Size(136, 42);
             this.kdLabel.TabIndex = 10;
             this.kdLabel.Text = "0.5";
             this.kdLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // kdTrackBar
             // 
-            this.kdTrackBar.Location = new System.Drawing.Point(6, 19);
+            this.kdTrackBar.Location = new System.Drawing.Point(8, 23);
+            this.kdTrackBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.kdTrackBar.Name = "kdTrackBar";
-            this.kdTrackBar.Size = new System.Drawing.Size(104, 45);
+            this.kdTrackBar.Size = new System.Drawing.Size(139, 56);
             this.kdTrackBar.TabIndex = 8;
             this.kdTrackBar.Value = 5;
             this.kdTrackBar.Scroll += new System.EventHandler(this.kdTrackBar_Scroll);
@@ -215,9 +231,11 @@ namespace GK_P2
             // 
             this.groupBox4.Controls.Add(this.mLabel);
             this.groupBox4.Controls.Add(this.mTrackBar);
-            this.groupBox4.Location = new System.Drawing.Point(808, 12);
+            this.groupBox4.Location = new System.Drawing.Point(1077, 15);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(114, 86);
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox4.Size = new System.Drawing.Size(152, 106);
             this.groupBox4.TabIndex = 12;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "M";
@@ -227,20 +245,22 @@ namespace GK_P2
             this.mLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.mLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.mLabel.Location = new System.Drawing.Point(6, 49);
+            this.mLabel.Location = new System.Drawing.Point(8, 60);
+            this.mLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.mLabel.Name = "mLabel";
-            this.mLabel.Size = new System.Drawing.Size(102, 34);
+            this.mLabel.Size = new System.Drawing.Size(136, 42);
             this.mLabel.TabIndex = 10;
             this.mLabel.Text = "50";
             this.mLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // mTrackBar
             // 
-            this.mTrackBar.Location = new System.Drawing.Point(6, 19);
+            this.mTrackBar.Location = new System.Drawing.Point(8, 23);
+            this.mTrackBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.mTrackBar.Maximum = 100;
             this.mTrackBar.Minimum = 1;
             this.mTrackBar.Name = "mTrackBar";
-            this.mTrackBar.Size = new System.Drawing.Size(104, 45);
+            this.mTrackBar.Size = new System.Drawing.Size(139, 56);
             this.mTrackBar.TabIndex = 8;
             this.mTrackBar.TickFrequency = 10;
             this.mTrackBar.Value = 50;
@@ -250,9 +270,11 @@ namespace GK_P2
             // 
             this.groupBox5.Controls.Add(this.lightZTextBox);
             this.groupBox5.Controls.Add(this.button2);
-            this.groupBox5.Location = new System.Drawing.Point(808, 104);
+            this.groupBox5.Location = new System.Drawing.Point(1077, 128);
+            this.groupBox5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(114, 86);
+            this.groupBox5.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox5.Size = new System.Drawing.Size(152, 106);
             this.groupBox5.TabIndex = 13;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Light Z";
@@ -261,21 +283,39 @@ namespace GK_P2
             // 
             this.groupBox6.Controls.Add(this.withLightButton);
             this.groupBox6.Controls.Add(this.lightAnimationButton);
-            this.groupBox6.Location = new System.Drawing.Point(530, 104);
+            this.groupBox6.Location = new System.Drawing.Point(707, 128);
+            this.groupBox6.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(114, 86);
+            this.groupBox6.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox6.Size = new System.Drawing.Size(152, 106);
             this.groupBox6.TabIndex = 14;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Light animation";
+            // 
+            // withLightButton
+            // 
+            this.withLightButton.BackColor = System.Drawing.Color.Yellow;
+            this.withLightButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.withLightButton.Enabled = false;
+            this.withLightButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.withLightButton.Location = new System.Drawing.Point(8, 70);
+            this.withLightButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.withLightButton.Name = "withLightButton";
+            this.withLightButton.Size = new System.Drawing.Size(136, 28);
+            this.withLightButton.TabIndex = 1;
+            this.withLightButton.Text = "Light ON";
+            this.withLightButton.UseVisualStyleBackColor = false;
+            this.withLightButton.Click += new System.EventHandler(this.withLightButton_Click);
             // 
             // lightAnimationButton
             // 
             this.lightAnimationButton.BackColor = System.Drawing.Color.Yellow;
             this.lightAnimationButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lightAnimationButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.lightAnimationButton.Location = new System.Drawing.Point(6, 28);
+            this.lightAnimationButton.Location = new System.Drawing.Point(8, 34);
+            this.lightAnimationButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.lightAnimationButton.Name = "lightAnimationButton";
-            this.lightAnimationButton.Size = new System.Drawing.Size(102, 23);
+            this.lightAnimationButton.Size = new System.Drawing.Size(136, 28);
             this.lightAnimationButton.TabIndex = 0;
             this.lightAnimationButton.Text = "Animation ON";
             this.lightAnimationButton.UseVisualStyleBackColor = false;
@@ -285,18 +325,21 @@ namespace GK_P2
             // 
             this.debugPanelLabel.AutoSize = true;
             this.debugPanelLabel.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.debugPanelLabel.Location = new System.Drawing.Point(12, 524);
+            this.debugPanelLabel.Location = new System.Drawing.Point(16, 645);
+            this.debugPanelLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.debugPanelLabel.Name = "debugPanelLabel";
-            this.debugPanelLabel.Size = new System.Drawing.Size(68, 13);
+            this.debugPanelLabel.Size = new System.Drawing.Size(89, 17);
             this.debugPanelLabel.TabIndex = 15;
             this.debugPanelLabel.Text = "Debug panel";
             // 
             // groupBox7
             // 
             this.groupBox7.Controls.Add(this.lightColorButton);
-            this.groupBox7.Location = new System.Drawing.Point(674, 104);
+            this.groupBox7.Location = new System.Drawing.Point(899, 128);
+            this.groupBox7.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(114, 86);
+            this.groupBox7.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox7.Size = new System.Drawing.Size(152, 106);
             this.groupBox7.TabIndex = 16;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Light color";
@@ -306,9 +349,10 @@ namespace GK_P2
             this.lightColorButton.BackColor = System.Drawing.Color.White;
             this.lightColorButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lightColorButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.lightColorButton.Location = new System.Drawing.Point(9, 49);
+            this.lightColorButton.Location = new System.Drawing.Point(12, 60);
+            this.lightColorButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.lightColorButton.Name = "lightColorButton";
-            this.lightColorButton.Size = new System.Drawing.Size(96, 23);
+            this.lightColorButton.Size = new System.Drawing.Size(128, 28);
             this.lightColorButton.TabIndex = 0;
             this.lightColorButton.Text = "Select new";
             this.lightColorButton.UseVisualStyleBackColor = false;
@@ -316,26 +360,13 @@ namespace GK_P2
             // 
             // texturePreviewWrapper
             // 
-            this.texturePreviewWrapper.Location = new System.Drawing.Point(153, 59);
+            this.texturePreviewWrapper.Location = new System.Drawing.Point(204, 73);
+            this.texturePreviewWrapper.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.texturePreviewWrapper.Name = "texturePreviewWrapper";
-            this.texturePreviewWrapper.Size = new System.Drawing.Size(83, 48);
+            this.texturePreviewWrapper.Size = new System.Drawing.Size(111, 59);
             this.texturePreviewWrapper.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.texturePreviewWrapper.TabIndex = 17;
             this.texturePreviewWrapper.TabStop = false;
-            // 
-            // withLightButton
-            // 
-            this.withLightButton.BackColor = System.Drawing.Color.Yellow;
-            this.withLightButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.withLightButton.Enabled = false;
-            this.withLightButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.withLightButton.Location = new System.Drawing.Point(6, 57);
-            this.withLightButton.Name = "withLightButton";
-            this.withLightButton.Size = new System.Drawing.Size(102, 23);
-            this.withLightButton.TabIndex = 1;
-            this.withLightButton.Text = "Light ON";
-            this.withLightButton.UseVisualStyleBackColor = false;
-            this.withLightButton.Click += new System.EventHandler(this.withLightButton_Click);
             // 
             // groupBox8
             // 
@@ -346,66 +377,36 @@ namespace GK_P2
             this.groupBox8.Controls.Add(this.texturePreviewWrapper);
             this.groupBox8.Controls.Add(this.objectTextureRadioButton);
             this.groupBox8.Controls.Add(this.objectSolidColorRadioButton);
-            this.groupBox8.Location = new System.Drawing.Point(530, 196);
+            this.groupBox8.Location = new System.Drawing.Point(707, 241);
+            this.groupBox8.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(392, 182);
+            this.groupBox8.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox8.Size = new System.Drawing.Size(523, 224);
             this.groupBox8.TabIndex = 18;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Object color";
             // 
-            // objectSolidColorRadioButton
+            // loadTextureButton
             // 
-            this.objectSolidColorRadioButton.AutoSize = true;
-            this.objectSolidColorRadioButton.Location = new System.Drawing.Point(9, 19);
-            this.objectSolidColorRadioButton.Name = "objectSolidColorRadioButton";
-            this.objectSolidColorRadioButton.Size = new System.Drawing.Size(74, 17);
-            this.objectSolidColorRadioButton.TabIndex = 0;
-            this.objectSolidColorRadioButton.Text = "Solid color";
-            this.objectSolidColorRadioButton.UseVisualStyleBackColor = true;
-            this.objectSolidColorRadioButton.CheckedChanged += new System.EventHandler(this.objectSolidColorRadioButton_CheckedChanged);
-            // 
-            // objectTextureRadioButton
-            // 
-            this.objectTextureRadioButton.AutoSize = true;
-            this.objectTextureRadioButton.Checked = true;
-            this.objectTextureRadioButton.Location = new System.Drawing.Point(153, 19);
-            this.objectTextureRadioButton.Name = "objectTextureRadioButton";
-            this.objectTextureRadioButton.Size = new System.Drawing.Size(61, 17);
-            this.objectTextureRadioButton.TabIndex = 1;
-            this.objectTextureRadioButton.TabStop = true;
-            this.objectTextureRadioButton.Text = "Texture";
-            this.objectTextureRadioButton.UseVisualStyleBackColor = true;
-            this.objectTextureRadioButton.CheckedChanged += new System.EventHandler(this.objectTextureRadioButton_CheckedChanged);
-            // 
-            // objectSolidColorButton
-            // 
-            this.objectSolidColorButton.BackColor = System.Drawing.Color.Aquamarine;
-            this.objectSolidColorButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.objectSolidColorButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.objectSolidColorButton.Location = new System.Drawing.Point(12, 59);
-            this.objectSolidColorButton.Name = "objectSolidColorButton";
-            this.objectSolidColorButton.Size = new System.Drawing.Size(96, 23);
-            this.objectSolidColorButton.TabIndex = 2;
-            this.objectSolidColorButton.Text = "Select new color";
-            this.objectSolidColorButton.UseVisualStyleBackColor = false;
-            this.objectSolidColorButton.Click += new System.EventHandler(this.objectSolidColorButton_Click);
-            // 
-            // textureNormalMapPreviewWrapper
-            // 
-            this.textureNormalMapPreviewWrapper.Location = new System.Drawing.Point(153, 113);
-            this.textureNormalMapPreviewWrapper.Name = "textureNormalMapPreviewWrapper";
-            this.textureNormalMapPreviewWrapper.Size = new System.Drawing.Size(83, 48);
-            this.textureNormalMapPreviewWrapper.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.textureNormalMapPreviewWrapper.TabIndex = 19;
-            this.textureNormalMapPreviewWrapper.TabStop = false;
+            this.loadTextureButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.loadTextureButton.Location = new System.Drawing.Point(348, 23);
+            this.loadTextureButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.loadTextureButton.Name = "loadTextureButton";
+            this.loadTextureButton.Size = new System.Drawing.Size(152, 28);
+            this.loadTextureButton.TabIndex = 10;
+            this.loadTextureButton.Text = "Load texture";
+            this.loadTextureButton.UseVisualStyleBackColor = true;
+            this.loadTextureButton.Click += new System.EventHandler(this.loadTextureButton_Click);
             // 
             // groupBox9
             // 
             this.groupBox9.Controls.Add(this.kLabel);
             this.groupBox9.Controls.Add(this.kTrackBar);
-            this.groupBox9.Location = new System.Drawing.Point(261, 59);
+            this.groupBox9.Location = new System.Drawing.Point(348, 73);
+            this.groupBox9.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(114, 86);
+            this.groupBox9.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox9.Size = new System.Drawing.Size(152, 106);
             this.groupBox9.TabIndex = 20;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "K";
@@ -415,39 +416,82 @@ namespace GK_P2
             this.kLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.kLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.kLabel.Location = new System.Drawing.Point(6, 49);
+            this.kLabel.Location = new System.Drawing.Point(8, 60);
+            this.kLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.kLabel.Name = "kLabel";
-            this.kLabel.Size = new System.Drawing.Size(102, 34);
+            this.kLabel.Size = new System.Drawing.Size(136, 42);
             this.kLabel.TabIndex = 9;
             this.kLabel.Text = "0.5";
             this.kLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // kTrackBar
             // 
-            this.kTrackBar.Location = new System.Drawing.Point(6, 19);
+            this.kTrackBar.Location = new System.Drawing.Point(8, 23);
+            this.kTrackBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.kTrackBar.Name = "kTrackBar";
-            this.kTrackBar.Size = new System.Drawing.Size(104, 45);
+            this.kTrackBar.Size = new System.Drawing.Size(139, 56);
             this.kTrackBar.TabIndex = 8;
             this.kTrackBar.Value = 5;
             this.kTrackBar.Scroll += new System.EventHandler(this.kTrackBar_Scroll);
             // 
-            // loadTextureButton
+            // textureNormalMapPreviewWrapper
             // 
-            this.loadTextureButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.loadTextureButton.Location = new System.Drawing.Point(261, 19);
-            this.loadTextureButton.Name = "loadTextureButton";
-            this.loadTextureButton.Size = new System.Drawing.Size(114, 23);
-            this.loadTextureButton.TabIndex = 10;
-            this.loadTextureButton.Text = "Load texture";
-            this.loadTextureButton.UseVisualStyleBackColor = true;
-            this.loadTextureButton.Click += new System.EventHandler(this.loadTextureButton_Click);
+            this.textureNormalMapPreviewWrapper.Location = new System.Drawing.Point(204, 139);
+            this.textureNormalMapPreviewWrapper.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textureNormalMapPreviewWrapper.Name = "textureNormalMapPreviewWrapper";
+            this.textureNormalMapPreviewWrapper.Size = new System.Drawing.Size(111, 59);
+            this.textureNormalMapPreviewWrapper.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.textureNormalMapPreviewWrapper.TabIndex = 19;
+            this.textureNormalMapPreviewWrapper.TabStop = false;
+            // 
+            // objectSolidColorButton
+            // 
+            this.objectSolidColorButton.BackColor = System.Drawing.Color.Aquamarine;
+            this.objectSolidColorButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.objectSolidColorButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.objectSolidColorButton.Location = new System.Drawing.Point(16, 73);
+            this.objectSolidColorButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.objectSolidColorButton.Name = "objectSolidColorButton";
+            this.objectSolidColorButton.Size = new System.Drawing.Size(128, 28);
+            this.objectSolidColorButton.TabIndex = 2;
+            this.objectSolidColorButton.Text = "Select new color";
+            this.objectSolidColorButton.UseVisualStyleBackColor = false;
+            this.objectSolidColorButton.Click += new System.EventHandler(this.objectSolidColorButton_Click);
+            // 
+            // objectTextureRadioButton
+            // 
+            this.objectTextureRadioButton.AutoSize = true;
+            this.objectTextureRadioButton.Checked = true;
+            this.objectTextureRadioButton.Location = new System.Drawing.Point(204, 23);
+            this.objectTextureRadioButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.objectTextureRadioButton.Name = "objectTextureRadioButton";
+            this.objectTextureRadioButton.Size = new System.Drawing.Size(77, 21);
+            this.objectTextureRadioButton.TabIndex = 1;
+            this.objectTextureRadioButton.TabStop = true;
+            this.objectTextureRadioButton.Text = "Texture";
+            this.objectTextureRadioButton.UseVisualStyleBackColor = true;
+            this.objectTextureRadioButton.CheckedChanged += new System.EventHandler(this.objectTextureRadioButton_CheckedChanged);
+            // 
+            // objectSolidColorRadioButton
+            // 
+            this.objectSolidColorRadioButton.AutoSize = true;
+            this.objectSolidColorRadioButton.Location = new System.Drawing.Point(12, 23);
+            this.objectSolidColorRadioButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.objectSolidColorRadioButton.Name = "objectSolidColorRadioButton";
+            this.objectSolidColorRadioButton.Size = new System.Drawing.Size(95, 21);
+            this.objectSolidColorRadioButton.TabIndex = 0;
+            this.objectSolidColorRadioButton.Text = "Solid color";
+            this.objectSolidColorRadioButton.UseVisualStyleBackColor = true;
+            this.objectSolidColorRadioButton.CheckedChanged += new System.EventHandler(this.objectSolidColorRadioButton_CheckedChanged);
             // 
             // groupBox10
             // 
             this.groupBox10.Controls.Add(this.editModeCheckbox);
-            this.groupBox10.Location = new System.Drawing.Point(674, 384);
+            this.groupBox10.Location = new System.Drawing.Point(899, 473);
+            this.groupBox10.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(114, 86);
+            this.groupBox10.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox10.Size = new System.Drawing.Size(152, 106);
             this.groupBox10.TabIndex = 19;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Edit mode";
@@ -455,19 +499,30 @@ namespace GK_P2
             // editModeCheckbox
             // 
             this.editModeCheckbox.AutoSize = true;
-            this.editModeCheckbox.Location = new System.Drawing.Point(12, 38);
+            this.editModeCheckbox.Location = new System.Drawing.Point(16, 47);
+            this.editModeCheckbox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.editModeCheckbox.Name = "editModeCheckbox";
-            this.editModeCheckbox.Size = new System.Drawing.Size(88, 17);
+            this.editModeCheckbox.Size = new System.Drawing.Size(113, 21);
             this.editModeCheckbox.TabIndex = 0;
             this.editModeCheckbox.Text = "Edit mode on";
             this.editModeCheckbox.UseVisualStyleBackColor = true;
             this.editModeCheckbox.CheckedChanged += new System.EventHandler(this.editModeCheckbox_CheckedChanged);
             // 
+            // fpsLabel
+            // 
+            this.fpsLabel.AutoSize = true;
+            this.fpsLabel.Location = new System.Drawing.Point(715, 612);
+            this.fpsLabel.Name = "fpsLabel";
+            this.fpsLabel.Size = new System.Drawing.Size(46, 17);
+            this.fpsLabel.TabIndex = 20;
+            this.fpsLabel.Text = "label1";
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(934, 546);
+            this.ClientSize = new System.Drawing.Size(1245, 672);
+            this.Controls.Add(this.fpsLabel);
             this.Controls.Add(this.groupBox10);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox7);
@@ -479,6 +534,7 @@ namespace GK_P2
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.wrapper);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Form1";
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -502,10 +558,10 @@ namespace GK_P2
             ((System.ComponentModel.ISupportInitialize)(this.texturePreviewWrapper)).EndInit();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.textureNormalMapPreviewWrapper)).EndInit();
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kTrackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textureNormalMapPreviewWrapper)).EndInit();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
             this.ResumeLayout(false);
@@ -549,6 +605,7 @@ namespace GK_P2
         private System.Windows.Forms.Button loadTextureButton;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.CheckBox editModeCheckbox;
+        private System.Windows.Forms.Label fpsLabel;
     }
 }
 

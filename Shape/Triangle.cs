@@ -64,8 +64,8 @@ namespace GK_P2.Shape
                 e.Graphics.FillEllipse(Brushes.Black, new Rectangle((int)(this.Point3.X - 3), (int)(this.Point3.Y - 3), 6, 6));
             }
             else
-                Filler.Filler.FillPolygon(points, color, bm, (x, y) => this.GetFillColorForPixel(light, x, y, this.MidPoint.Z));
-        }
+                Filler.Filler.FillPolygon(points, color, bm);
+        }//(x, y) => this.GetFillColorForPixel(light, x, y, this.MidPoint.Z)
 
         private int[] GetObjectColor(double x, double y, double z)
         {
@@ -86,17 +86,17 @@ namespace GK_P2.Shape
             }
         }
 
-        private Vector3d GetNormalVersor()
+        private Vector3d GetNormalVersor(int x, int y)
         {
             if (Settings.ObjectFillType == Settings.ObjectFillTypeEnum.SOLID_COLOR || !Settings.TextureLoaded)
                 return this.Normal.ToVersor();
 
-            return (Settings.K * this.Normal.ToVersor() + (1 - Settings.K) * Settings.NormalMap[(int)this.Point1.X, (int)this.Point1.Y].ToVersor()).ToVersor();
+            return (Settings.K * this.Normal.ToVersor() + (1 - Settings.K) * Settings.NormalMap[x, y]).ToVersor();
         }
 
         private Color GetFillColorForPixel(Point light, double x, double y, double z)
         {
-            int[] lightColor = new int[] { Settings.LightColor.R, Settings.LightColor.G, Settings.LightColor.B };
+            double[] lightColor = new double[] { Settings.LightColor.R / 255, Settings.LightColor.G / 255, Settings.LightColor.B / 255 };
             int[] objectColor = this.GetObjectColor(x, y, z);
 
             if (!Settings.WithLight)
@@ -105,19 +105,27 @@ namespace GK_P2.Shape
             int[] returnColor = new int[] { 0, 0, 0 };
 
             Vector3d L = (new Vector3d() { X = (light.X - x), Y = (light.Y - y), Z = (Settings.LightZ - z) }).ToVersor();
-            Vector3d N = this.GetNormalVersor();
-            Vector3d V = (new Vector3d() { X = 0, Y = 0, Z = 1 });
+            Vector3d N = this.GetNormalVersor((int)x, (int)y);
 
-            double NLScalar = N.ScalarProduct(L);
+            double nCosL = N.ScalarProduct(L);
 
-            Vector3d R = N * (2 * NLScalar) - L;
+            Vector3d R = N * (2 * nCosL) - L;
+
+            double first = Settings.Kd * Math.Max(nCosL, 0);
+
+            // Because vCosR = v scalar product r, and v.x = v.y = 0 and v.z = 1
+            double vCosR = R.Z;
+
+            double second = Settings.Ks * Math.Pow(vCosR, Settings.M);
 
             for (int i = 0; i < 3; i++)
             {
-                double iL = (double)lightColor[i] / 255;
+                double iL = (double)lightColor[i];
                 double iO = (double)objectColor[i];
 
-                returnColor[i] = (int)(Settings.Kd * iL * iO * Math.Max(N.GetCos(L), 0) + Settings.Ks * iL * iO * Math.Pow(V.GetCos(R), Settings.M));
+                double iLiO = iL * iO;
+
+                returnColor[i] = (int)(first * iLiO  + second * iLiO);
 
                 returnColor[i] = Math.Min(255, returnColor[i]);
                 returnColor[i] = Math.Max(0, returnColor[i]);

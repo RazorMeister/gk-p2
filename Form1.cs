@@ -21,6 +21,9 @@ namespace GK_P2
         private double r = 0;
         private double deltaR = 5;
 
+        DateTime _lastCheckTime = DateTime.Now;
+        long _frameCount = 0;
+
         private System.Timers.Timer timer;
 
         private Thread loadTextureThread;
@@ -44,12 +47,17 @@ namespace GK_P2
             this.wrapper.Image = bmp;
 
             this.LoadTexture();
+
+            var timer = new System.Timers.Timer();
+            timer.Interval = 500;
+            timer.Elapsed += showFps;
+            timer.Enabled = true;
         }
 
         private async void LoadTextureHelper(string texturePath)
         {
             var image = texturePath != null ? (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile(texturePath) : Resources.defaultTexture;
-            var normalMap = NormalMap.Make(image, 1.0);
+            var normalMap = NormalMap.Make(image, 2.0);
             
             this.textureNormalMapPreviewWrapper.Image = normalMap;
             this.texturePreviewWrapper.Image = image;
@@ -72,48 +80,6 @@ namespace GK_P2
             this.loadTextureThread.Start();
         }
 
-        private System.Drawing.Bitmap MakeNormalMapFromTexture(System.Drawing.Bitmap image)
-        {
-            int w = image.Width - 1;
-            int h = image.Height - 1;
-            float sample_l;
-            float sample_r;
-            float sample_u;
-            float sample_d;
-            float x_vector;
-            float y_vector;
-            System.Drawing.Bitmap normal = new System.Drawing.Bitmap(image.Width, image.Height);
-
-            Settings.NormalMap = new Vector3d[w + 1, h + 1];
-
-            for (int x = 1; x < w + 1; x++)
-            {
-                for (int y = 1; y < h + 1; y++)
-                {
-                    if (x > 1) sample_l = image.GetPixel(x - 1, y).GetBrightness();
-                    else sample_l = image.GetPixel(x, y).GetBrightness();
-
-                    if (x < w) sample_r = image.GetPixel(x + 1, y).GetBrightness();
-                    else sample_r = image.GetPixel(x, y).GetBrightness();
-
-                    if (y > 1) sample_u = image.GetPixel(x, y - 1).GetBrightness();
-                    else sample_u = image.GetPixel(x, y).GetBrightness();
-
-                    if (y < h) sample_d = image.GetPixel(x, y + 1).GetBrightness();
-                    else sample_d = image.GetPixel(x, y).GetBrightness();
-
-                    x_vector = (((sample_l - sample_r) + 1) * .5f);
-                    y_vector = (((sample_u - sample_d) + 1) * .5f);
-
-                    Settings.NormalMap[x, y] = new Vector3d() { X = x_vector, Y = y_vector, Z = 1 };
-
-                    Color col = Color.FromArgb(255, (int)(x_vector*255), (int)(y_vector*255), 255);
-                    normal.SetPixel(x, y, col);
-                }
-            }
-            return normal;
-        }
-
         private void InitAnimation()
         {
             timer = new System.Timers.Timer();
@@ -124,18 +90,36 @@ namespace GK_P2
 
         private void wrapper_Paint(object sender, PaintEventArgs e)
         {
+            Interlocked.Increment(ref _frameCount);
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            FastBitmap bm = new FastBitmap(this.wrapper.Width, this.wrapper.Height);
+            using(FastBitmap bm = new FastBitmap(this.wrapper.Width, this.wrapper.Height))
+            {
+                this.sphere.Draw(e, bm, this.light);
 
-            this.sphere.Draw(e, bm, this.light);
 
+                e.Graphics.DrawImage(bm.Bitmap, 0, 0);
+            }
 
-            e.Graphics.DrawImage(bm.Bitmap, 0, 0);
-
+            
             sw.Stop();
             //Debug.WriteLine("Elapsed={0}", sw.Elapsed);
+        }
+
+        // called every once in a while
+        double GetFps()
+        {
+            double secondsElapsed = (DateTime.Now - _lastCheckTime).TotalSeconds;
+            long count = Interlocked.Exchange(ref _frameCount, 0);
+            double fps = count / secondsElapsed;
+            _lastCheckTime = DateTime.Now;
+            return fps;
+        }
+
+        private void showFps(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            Debug.WriteLine($"Fps - {this.GetFps().ToString()}");
         }
 
         private void animate(Object source, System.Timers.ElapsedEventArgs e)
