@@ -61,7 +61,7 @@ namespace GK_P2
             this.LoadTexture();
 
             var timer = new System.Timers.Timer();
-            timer.Interval = 500;
+            timer.Interval = 1000;
             timer.Elapsed += showFps;
             timer.Enabled = true;
 

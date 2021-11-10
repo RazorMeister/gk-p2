@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using GK_P2.Shape;
 
@@ -37,7 +38,58 @@ namespace GK_P2
                 }
             }
 
-            return normal;
+            System.Drawing.Bitmap newNormal = new System.Drawing.Bitmap(image.Width, image.Height);
+            var newNormalMap = new Vector3d[image.Width, image.Height];
+
+            for (int x = 0; x < Math.Min(image.Width, Settings.WRAPPER_WIDTH); x++)
+            {
+                for (int y = 0; y < Math.Min(image.Height, Settings.WRAPPER_HEIGHT); y++)
+                {
+                    int cx = image.Width / 2;
+                    int cy = image.Height / 2;
+
+                    int bulgeRadius = cx;
+                    double bulgeStrength = 1;
+
+                    int dx = x - cx;
+                    int dy = y - cy;
+                    double distanceSquared = dx * dx + dy * dy; ;
+                    int sx = x;
+                    int sy = y;
+
+                    if (distanceSquared < bulgeRadius * bulgeRadius)
+                    {
+                        double distance = Math.Sqrt(distanceSquared);
+
+                        double r = distance / bulgeRadius;
+                        double a = Math.Atan2(dy, dx);
+                        double rn = Math.Pow(r, bulgeStrength) * distance;
+                        double newX = rn * Math.Cos(a) + cx;
+                        double newY = rn * Math.Sin(a) + cy;
+                        sx += (int)(newX - x);
+                        sy += (int)(newY - y);
+                        
+                        
+                    }
+
+                    if (sx >= 0 && sx < image.Width && sy >= 0 && sy < image.Height)
+                    {
+                        newNormal.SetPixel(
+                            x, y,
+                            normal.GetPixel(
+                                sx,
+                                sy
+                            )
+                        );
+
+                        newNormalMap[x, y] = Settings.NormalMap[sx, sy];
+                    }
+                }
+            }
+
+            Settings.NormalMap = newNormalMap;
+
+            return newNormal;
         }
 
         private static double Intensity(Color color) => (color.R + color.G + color.B) / (3.0 * 255.0);
