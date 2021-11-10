@@ -10,10 +10,11 @@ namespace GK_P2
     {
         private static CudaHelper instance;
 
-        public static CudaHelper GetInstance()
+        public static CudaHelper GetInstance() => instance;
+
+        public static void Initialize()
         {
             if (instance == null) instance = new CudaHelper();
-            return instance;
         }
 
         private CudaContext ctx;
@@ -22,7 +23,7 @@ namespace GK_P2
         private CudaHelper()
         {
             this.ctx = new CudaContext(CudaContext.GetMaxGflopsDeviceId());
-            Stream stream = new MemoryStream(Resources.GetColor);//;File.OpenRead(@"F:\Edukacja\Studia\Sem 5\GrafikaKomputerowa\CUDA\CUDA\CudaProgramme2\GetColor.ptx");
+            Stream stream = new MemoryStream(Resources.GetColor);
 
             if (stream == null) throw new ArgumentException("Kernel not found in resources.");
 

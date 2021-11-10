@@ -32,7 +32,7 @@ namespace GK_P2.Shape
                 return;
             }
 
-            int range = this.triangleList.Count / 100;
+            /*int range = this.triangleList.Count / 100;
 
             Parallel.For(0, (int)Math.Ceiling((double)this.triangleList.Count / range), num =>
             {
@@ -43,8 +43,8 @@ namespace GK_P2.Shape
                     this.triangleList[index].Generate(bm, light);
                 }
 
-            });
-            //Parallel.For(0, this.triangleList.Count - 1, num => this.triangleList[num].Draw(e, bm, light));
+            });*/
+            Parallel.For(0, this.triangleList.Count - 1, num => this.triangleList[num].Generate(bm, light));
         }
 
         public void Triangulate()
@@ -75,8 +75,8 @@ namespace GK_P2.Shape
                 tr.Point1 = p1;
                 tr.Point2 = p2;
                 tr.Point3 = p3;
-                tr.Normal = trlist[i].Normal;
-                tr.SetMidPoint();
+                tr.Normal = trlist[i].Normal.ToVersor();
+                tr.SetUp();
 
                 this.triangleList.Add(tr);
             }

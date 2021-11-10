@@ -21,6 +21,8 @@ namespace GK_P2
         }
 
         public static bool EditMode { get; set; } = false;
+        public static bool CUDAMode { get; set; } = false;
+        public static bool CUDASupported { get; set; } = true;
 
         /* Sphere settings */
         public static int SphereDensity { get; set; } = 45;

@@ -35,9 +35,18 @@ namespace GK_P2
         {
             InitializeComponent();
 
-            CudaHelper.GetInstance();
-
             this.debugPanelLabel.Text = $"Sphere | Center ({Settings.CENTER_X}, {Settings.CENTER_Y}, {Settings.CENTER_Z}) | Radius {Settings.SPHERE_R}";
+
+            try
+            {
+                CudaHelper.Initialize();
+            }
+            catch (DllNotFoundException e)
+            {
+                this.cudaModeCheckbox.Enabled = false;
+                this.cudaSupportedLabel.Text = "Not supported on this device";
+                Settings.CUDASupported = false;
+            }
 
             this.InitAnimation();
 
@@ -92,13 +101,21 @@ namespace GK_P2
             timer.Enabled = true;
         }
 
+        private AbstractBitmap CreateBitmap()
+        {
+            if (Settings.CUDAMode)
+                return new CudaBitmap(this.wrapper.Width, this.wrapper.Height);
+
+            return new FastBitmap(this.wrapper.Width, this.wrapper.Height);
+        }
+
         private void wrapper_Paint(object sender, PaintEventArgs e)
         {
             Interlocked.Increment(ref _frameCount);
            // Stopwatch sw = new Stopwatch();
             //sw.Start();
 
-            using(AbstractBitmap bm = new CudaBitmap(this.wrapper.Width, this.wrapper.Height))
+            using(AbstractBitmap bm = this.CreateBitmap())
             //using(AbstractBitmap bm = new FastBitmap(this.wrapper.Width, this.wrapper.Height))
             {
                 
@@ -250,6 +267,7 @@ namespace GK_P2
             }
             else
             {
+                Settings.CUDAMode = false;
                 this.withLightButton.BackColor = Color.Yellow;
                 this.withLightButton.Text = "Light ON";
                 this.lightAnimationButton.Enabled = true;
@@ -347,6 +365,8 @@ namespace GK_P2
                 this.withLightButton.BackColor = Color.WhiteSmoke;
                 this.withLightButton.Text = "Light OFF";
                 this.lightAnimationButton.Enabled = false;
+
+                Settings.CUDAMode = false;
             }
             else
             {
@@ -385,7 +405,7 @@ namespace GK_P2
 
             this.movingTriangle.SelectedPoint.X += dX;
             this.movingTriangle.SelectedPoint.Y += dY;
-            this.movingTriangle.SetMidPoint();
+            this.movingTriangle.SetUp();
 
             this.lastMovingPoint = e.Location;
 
@@ -398,6 +418,12 @@ namespace GK_P2
                 this.movingTriangle.SelectedPoint = null;
 
             this.movingTriangle = null;
+        }
+
+        private void cudaModeCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.CUDAMode = this.cudaModeCheckbox.Checked;
+            this.wrapper.Invalidate();
         }
     }
 }
