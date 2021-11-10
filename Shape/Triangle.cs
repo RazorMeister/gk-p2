@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.Runtime.Caching;
-using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 using GK_P2.Bitmap;
 
@@ -64,23 +61,37 @@ namespace GK_P2.Shape
 
         public void Generate(AbstractBitmap bm, Point light)
         {
-            /*Color color = this.GetFillColorForPixel(light, this.MidPoint.X, this.MidPoint.Y, this.MidPoint.Z);*/
-
-            Color p1Color = this.GetFillColorForPixel(light, this.Point1.X, this.Point1.Y, this.Point1.Z);
-            Color p2Color = this.GetFillColorForPixel(light, this.Point2.X, this.Point2.Y, this.Point2.Z);
-            Color p3Color = this.GetFillColorForPixel(light, this.Point3.X, this.Point3.Y, this.Point3.Z);
 
             var points = new List<Point>();
             points.Add(this.Point1.ToPoint());
             points.Add(this.Point2.ToPoint());
             points.Add(this.Point3.ToPoint());
 
+            var color = Color.Black;
+            Func<int, int, Color> getColorFunc = null;
+
+            switch (Settings.FillCalculation)
+            {
+                case Settings.FillCalculationEnum.EACH_PIXEL:
+                    getColorFunc = (x, y) => this.GetFillColorForPixel(light, x, y, this.MidPoint.Z);
+                    break;
+                case Settings.FillCalculationEnum.INTERPOLATION:
+                    Color p1Color = this.GetFillColorForPixel(light, this.Point1.X, this.Point1.Y, this.Point1.Z);
+                    Color p2Color = this.GetFillColorForPixel(light, this.Point2.X, this.Point2.Y, this.Point2.Z);
+                    Color p3Color = this.GetFillColorForPixel(light, this.Point3.X, this.Point3.Y, this.Point3.Z);
+                    getColorFunc = (x, y) => this.InterpolateColorForPixel(x, y, p1Color, p2Color, p3Color);
+                    break;
+                case Settings.FillCalculationEnum.ONE_PIXEL:
+                    color = this.GetFillColorForPixel(light, this.MidPoint.X, this.MidPoint.Y, this.MidPoint.Z);
+                    break;
+            }
+
+
             Filler.Filler.FillPolygon(
                 points: points, 
-                color: Color.Black,
+                color: color,
                 bm: bm,
-                //getColorFunc: (x, y) => this.GetFillColorForPixel(light, x, y, this.MidPoint.Z),
-                getColorFunc: (x, y) => this.InterpolateColorForPixel(x, y, p1Color, p2Color, p3Color),
+                getColorFunc: getColorFunc,
                 getPixelStructFunc: (x, y) => this.GetPixelStructForPixel(light, x, y, this.MidPoint.Z)
             );
         }
@@ -126,6 +137,8 @@ namespace GK_P2.Shape
 
         private double GetTriangleField(Point p1, Point p2, Point p3)
         {
+            // 1/2 * Determinant(x1 - x2, y1 - y2 | x1 - x3, y1 - y3)
+
             double firstX = p1.X - p2.X;
             double firstY = p1.Y - p2.Y;
 

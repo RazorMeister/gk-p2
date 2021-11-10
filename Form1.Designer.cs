@@ -63,10 +63,13 @@ namespace GK_P2
             this.objectSolidColorRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.editModeCheckbox = new System.Windows.Forms.CheckBox();
-            this.fpsLabel = new System.Windows.Forms.Label();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.cudaModeCheckbox = new System.Windows.Forms.CheckBox();
             this.cudaSupportedLabel = new System.Windows.Forms.Label();
+            this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.fillInterpolationRadioButton = new System.Windows.Forms.RadioButton();
+            this.fillEachPixelRadioButton = new System.Windows.Forms.RadioButton();
+            this.fillOnePixelRadioButton = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.wrapper)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.densityTrackBar)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -86,6 +89,7 @@ namespace GK_P2
             ((System.ComponentModel.ISupportInitialize)(this.textureNormalMapPreviewWrapper)).BeginInit();
             this.groupBox10.SuspendLayout();
             this.groupBox11.SuspendLayout();
+            this.groupBox12.SuspendLayout();
             this.SuspendLayout();
             // 
             // wrapper
@@ -133,7 +137,7 @@ namespace GK_P2
             // 
             this.groupBox1.Controls.Add(this.sphereDensityLabel);
             this.groupBox1.Controls.Add(this.densityTrackBar);
-            this.groupBox1.Location = new System.Drawing.Point(530, 384);
+            this.groupBox1.Location = new System.Drawing.Point(530, 426);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(114, 86);
             this.groupBox1.TabIndex = 9;
@@ -335,9 +339,9 @@ namespace GK_P2
             // 
             // texturePreviewWrapper
             // 
-            this.texturePreviewWrapper.Location = new System.Drawing.Point(153, 59);
+            this.texturePreviewWrapper.Location = new System.Drawing.Point(153, 48);
             this.texturePreviewWrapper.Name = "texturePreviewWrapper";
-            this.texturePreviewWrapper.Size = new System.Drawing.Size(83, 48);
+            this.texturePreviewWrapper.Size = new System.Drawing.Size(83, 45);
             this.texturePreviewWrapper.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.texturePreviewWrapper.TabIndex = 17;
             this.texturePreviewWrapper.TabStop = false;
@@ -353,7 +357,7 @@ namespace GK_P2
             this.groupBox8.Controls.Add(this.objectSolidColorRadioButton);
             this.groupBox8.Location = new System.Drawing.Point(530, 196);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(392, 182);
+            this.groupBox8.Size = new System.Drawing.Size(392, 152);
             this.groupBox8.TabIndex = 18;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Object color";
@@ -373,7 +377,7 @@ namespace GK_P2
             // 
             this.groupBox9.Controls.Add(this.kLabel);
             this.groupBox9.Controls.Add(this.kTrackBar);
-            this.groupBox9.Location = new System.Drawing.Point(261, 59);
+            this.groupBox9.Location = new System.Drawing.Point(261, 48);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.Size = new System.Drawing.Size(114, 86);
             this.groupBox9.TabIndex = 20;
@@ -403,9 +407,9 @@ namespace GK_P2
             // 
             // textureNormalMapPreviewWrapper
             // 
-            this.textureNormalMapPreviewWrapper.Location = new System.Drawing.Point(153, 113);
+            this.textureNormalMapPreviewWrapper.Location = new System.Drawing.Point(153, 99);
             this.textureNormalMapPreviewWrapper.Name = "textureNormalMapPreviewWrapper";
-            this.textureNormalMapPreviewWrapper.Size = new System.Drawing.Size(83, 48);
+            this.textureNormalMapPreviewWrapper.Size = new System.Drawing.Size(83, 45);
             this.textureNormalMapPreviewWrapper.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.textureNormalMapPreviewWrapper.TabIndex = 19;
             this.textureNormalMapPreviewWrapper.TabStop = false;
@@ -450,7 +454,7 @@ namespace GK_P2
             // groupBox10
             // 
             this.groupBox10.Controls.Add(this.editModeCheckbox);
-            this.groupBox10.Location = new System.Drawing.Point(674, 384);
+            this.groupBox10.Location = new System.Drawing.Point(674, 426);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(114, 86);
             this.groupBox10.TabIndex = 19;
@@ -468,21 +472,11 @@ namespace GK_P2
             this.editModeCheckbox.UseVisualStyleBackColor = true;
             this.editModeCheckbox.CheckedChanged += new System.EventHandler(this.editModeCheckbox_CheckedChanged);
             // 
-            // fpsLabel
-            // 
-            this.fpsLabel.AutoSize = true;
-            this.fpsLabel.Location = new System.Drawing.Point(536, 497);
-            this.fpsLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.fpsLabel.Name = "fpsLabel";
-            this.fpsLabel.Size = new System.Drawing.Size(35, 13);
-            this.fpsLabel.TabIndex = 20;
-            this.fpsLabel.Text = "label1";
-            // 
             // groupBox11
             // 
             this.groupBox11.Controls.Add(this.cudaSupportedLabel);
             this.groupBox11.Controls.Add(this.cudaModeCheckbox);
-            this.groupBox11.Location = new System.Drawing.Point(808, 384);
+            this.groupBox11.Location = new System.Drawing.Point(808, 426);
             this.groupBox11.Name = "groupBox11";
             this.groupBox11.Size = new System.Drawing.Size(114, 86);
             this.groupBox11.TabIndex = 21;
@@ -513,13 +507,60 @@ namespace GK_P2
             this.cudaSupportedLabel.TabIndex = 1;
             this.cudaSupportedLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // groupBox12
+            // 
+            this.groupBox12.Controls.Add(this.fillOnePixelRadioButton);
+            this.groupBox12.Controls.Add(this.fillInterpolationRadioButton);
+            this.groupBox12.Controls.Add(this.fillEachPixelRadioButton);
+            this.groupBox12.Location = new System.Drawing.Point(530, 354);
+            this.groupBox12.Name = "groupBox12";
+            this.groupBox12.Size = new System.Drawing.Size(392, 66);
+            this.groupBox12.TabIndex = 22;
+            this.groupBox12.TabStop = false;
+            this.groupBox12.Text = "Object fill calculation";
+            // 
+            // fillInterpolationRadioButton
+            // 
+            this.fillInterpolationRadioButton.AutoSize = true;
+            this.fillInterpolationRadioButton.Location = new System.Drawing.Point(153, 19);
+            this.fillInterpolationRadioButton.Name = "fillInterpolationRadioButton";
+            this.fillInterpolationRadioButton.Size = new System.Drawing.Size(83, 17);
+            this.fillInterpolationRadioButton.TabIndex = 1;
+            this.fillInterpolationRadioButton.Text = "Interpolation";
+            this.fillInterpolationRadioButton.UseVisualStyleBackColor = true;
+            this.fillInterpolationRadioButton.CheckedChanged += new System.EventHandler(this.fillInterpolationRadioButton_CheckedChanged);
+            // 
+            // fillEachPixelRadioButton
+            // 
+            this.fillEachPixelRadioButton.AutoSize = true;
+            this.fillEachPixelRadioButton.Checked = true;
+            this.fillEachPixelRadioButton.Location = new System.Drawing.Point(9, 19);
+            this.fillEachPixelRadioButton.Name = "fillEachPixelRadioButton";
+            this.fillEachPixelRadioButton.Size = new System.Drawing.Size(74, 17);
+            this.fillEachPixelRadioButton.TabIndex = 0;
+            this.fillEachPixelRadioButton.TabStop = true;
+            this.fillEachPixelRadioButton.Text = "Each pixel";
+            this.fillEachPixelRadioButton.UseVisualStyleBackColor = true;
+            this.fillEachPixelRadioButton.CheckedChanged += new System.EventHandler(this.fillEachPixelRadioButton_CheckedChanged);
+            // 
+            // fillOnePixelRadioButton
+            // 
+            this.fillOnePixelRadioButton.AutoSize = true;
+            this.fillOnePixelRadioButton.Location = new System.Drawing.Point(292, 19);
+            this.fillOnePixelRadioButton.Name = "fillOnePixelRadioButton";
+            this.fillOnePixelRadioButton.Size = new System.Drawing.Size(69, 17);
+            this.fillOnePixelRadioButton.TabIndex = 2;
+            this.fillOnePixelRadioButton.Text = "One pixel";
+            this.fillOnePixelRadioButton.UseVisualStyleBackColor = true;
+            this.fillOnePixelRadioButton.CheckedChanged += new System.EventHandler(this.fillOnePixelRadioButton_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(934, 546);
+            this.Controls.Add(this.groupBox12);
             this.Controls.Add(this.groupBox11);
-            this.Controls.Add(this.fpsLabel);
             this.Controls.Add(this.groupBox10);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox7);
@@ -531,8 +572,13 @@ namespace GK_P2
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.wrapper);
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(950, 585);
+            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(950, 585);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.Text = "Sphere filler";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.wrapper)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.densityTrackBar)).EndInit();
@@ -562,6 +608,8 @@ namespace GK_P2
             this.groupBox10.PerformLayout();
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
+            this.groupBox12.ResumeLayout(false);
+            this.groupBox12.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -603,10 +651,13 @@ namespace GK_P2
         private System.Windows.Forms.Button loadTextureButton;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.CheckBox editModeCheckbox;
-        private System.Windows.Forms.Label fpsLabel;
         private System.Windows.Forms.GroupBox groupBox11;
         private System.Windows.Forms.CheckBox cudaModeCheckbox;
         private System.Windows.Forms.Label cudaSupportedLabel;
+        private System.Windows.Forms.GroupBox groupBox12;
+        private System.Windows.Forms.RadioButton fillInterpolationRadioButton;
+        private System.Windows.Forms.RadioButton fillEachPixelRadioButton;
+        private System.Windows.Forms.RadioButton fillOnePixelRadioButton;
     }
 }
 

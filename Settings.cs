@@ -20,6 +20,13 @@ namespace GK_P2
             TEXTURE
         }
 
+        public enum FillCalculationEnum
+        {
+            EACH_PIXEL,
+            INTERPOLATION,
+            ONE_PIXEL
+        }
+
         public static bool EditMode { get; set; } = false;
         public static bool CUDAMode { get; set; } = false;
         public static bool CUDASupported { get; set; } = true;
@@ -31,6 +38,7 @@ namespace GK_P2
         public static Vector3d[,] NormalMap { get; set; }
         public static double K { get; set; } = 0.5;
         public static bool TextureLoaded { get; set; } = false;
+        public static FillCalculationEnum FillCalculation { get; set; } = FillCalculationEnum.EACH_PIXEL;
 
         /* Light settings */
         public static int LightZ { get; set; } = 260;

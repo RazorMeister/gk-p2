@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using GK_P2.Bitmap;
@@ -332,11 +333,14 @@ namespace GK_P2
         {
             this.PauseAnimation(() =>
             {
+                string workingDirectory = Environment.CurrentDirectory;
+
                 OpenFileDialog openFileDialog = new OpenFileDialog
                 {
                     CheckFileExists = true,
                     CheckPathExists = true,
                     RestoreDirectory = true,
+                    InitialDirectory = Directory.GetParent(workingDirectory).Parent.FullName
                 };
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -424,6 +428,28 @@ namespace GK_P2
         {
             Settings.CUDAMode = this.cudaModeCheckbox.Checked;
             this.wrapper.Invalidate();
+        }
+
+        private void fillEachPixelRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.FillCalculation = Settings.FillCalculationEnum.EACH_PIXEL;
+            this.cudaModeCheckbox.Enabled = true;
+        }
+
+        private void fillInterpolationRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.FillCalculation = Settings.FillCalculationEnum.INTERPOLATION;
+            Settings.CUDAMode = false;
+            this.cudaModeCheckbox.Checked = false;
+            this.cudaModeCheckbox.Enabled = false;
+        }
+
+        private void fillOnePixelRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.FillCalculation = Settings.FillCalculationEnum.ONE_PIXEL;
+            Settings.CUDAMode = false;
+            this.cudaModeCheckbox.Checked = false;
+            this.cudaModeCheckbox.Enabled = false;
         }
     }
 }
