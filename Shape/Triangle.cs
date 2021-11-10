@@ -117,7 +117,11 @@ namespace GK_P2.Shape
 
         private Vector3d GetNormalVersor(int x, int y)
         {
-            if (Settings.ObjectFillType == Settings.ObjectFillTypeEnum.SOLID_COLOR || !Settings.TextureLoaded)
+            if (
+                Settings.ObjectFillType == Settings.ObjectFillTypeEnum.SOLID_COLOR 
+                || !Settings.TextureLoaded
+                || (x >= Settings.NormalMap.GetLength(0) || y >= Settings.NormalMap.GetLength(1))
+            )
                 return this.Normal;
 
             return (Settings.K * this.Normal + (1 - Settings.K) * Settings.NormalMap[x, y]).ToVersor();

@@ -13,6 +13,8 @@ namespace GK_P2
         public const int CENTER_Y = 250;
         public const int CENTER_Z = 0;
         public const int SPHERE_R = 240;
+        public const int WRAPPER_WIDTH = 500;
+        public const int WRAPPER_HEIGHT = 500;
 
         public enum ObjectFillTypeEnum
         {

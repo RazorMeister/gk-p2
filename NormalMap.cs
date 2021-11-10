@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GK_P2.Shape;
 
 namespace GK_P2
@@ -15,9 +11,9 @@ namespace GK_P2
             System.Drawing.Bitmap normal = new System.Drawing.Bitmap(image.Width, image.Height);
             Settings.NormalMap = new Vector3d[image.Width, image.Height];
 
-            for (int x = 0; x < image.Width; x++)
+            for (int x = 0; x < Math.Min(image.Width, Settings.WRAPPER_WIDTH); x++)
             {
-                for (int y = 0; y < image.Height; y++)
+                for (int y = 0; y < Math.Min(image.Height, Settings.WRAPPER_HEIGHT); y++)
                 {
                     double topLeft = Intensity(image.GetPixel(Clamp(x - 1, image.Width - 1), Clamp(y - 1, image.Height - 1)));
                     double top = Intensity(image.GetPixel(Clamp(x, image.Width - 1), Clamp(y - 1, image.Height - 1)));

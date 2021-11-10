@@ -113,25 +113,12 @@ namespace GK_P2
         private void wrapper_Paint(object sender, PaintEventArgs e)
         {
             Interlocked.Increment(ref _frameCount);
-           // Stopwatch sw = new Stopwatch();
-            //sw.Start();
 
             using(AbstractBitmap bm = this.CreateBitmap())
-            //using(AbstractBitmap bm = new FastBitmap(this.wrapper.Width, this.wrapper.Height))
             {
-                
                 this.sphere.Draw(e, bm, this.light);
-                
-
-                //sw.Start();
                 e.Graphics.DrawImage(bm.GetBitmap(this.light), 0, 0);
-               // sw.Stop();
-                //Debug.WriteLine("Elapsed={0}", sw.Elapsed);
             }
-
-            
-            //sw.Stop();
-            //Debug.WriteLine("Elapsed={0}", sw.Elapsed);
         }
 
         // called every once in a while
