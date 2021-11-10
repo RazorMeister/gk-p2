@@ -61,7 +61,7 @@ namespace GK_P2
             this.LoadTexture();
 
             var timer = new System.Timers.Timer();
-            timer.Interval = 500;
+            timer.Interval = 100;
             timer.Elapsed += showFps;
             timer.Enabled = true;
 
@@ -327,7 +327,8 @@ namespace GK_P2
                     CheckFileExists = true,
                     CheckPathExists = true,
                     RestoreDirectory = true,
-                    InitialDirectory = Directory.GetParent(workingDirectory).Parent.FullName
+                    InitialDirectory = Directory.GetParent(workingDirectory).Parent.FullName,
+                    Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;..."
                 };
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
