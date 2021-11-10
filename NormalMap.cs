@@ -45,11 +45,11 @@ namespace GK_P2
             {
                 for (int y = 0; y < Math.Min(image.Height, Settings.WRAPPER_HEIGHT); y++)
                 {
-                    int cx = image.Width / 2;
-                    int cy = image.Height / 2;
+                    int cx = 250;
+                    int cy = 250;
 
-                    int bulgeRadius = cx;
-                    double bulgeStrength = 1;
+                    int bulgeRadius = 240;
+                    double bulgeStrength = 0.8;
 
                     int dx = x - cx;
                     int dy = y - cy;
