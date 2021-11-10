@@ -35,6 +35,8 @@ namespace GK_P2
         {
             InitializeComponent();
 
+            CudaHelper.GetInstance();
+
             this.debugPanelLabel.Text = $"Sphere | Center ({Settings.CENTER_X}, {Settings.CENTER_Y}, {Settings.CENTER_Z}) | Radius {Settings.SPHERE_R}";
 
             this.InitAnimation();
@@ -52,6 +54,8 @@ namespace GK_P2
             timer.Interval = 500;
             timer.Elapsed += showFps;
             timer.Enabled = true;
+
+            this.wrapper.Invalidate();
         }
 
         private async void LoadTextureHelper(string texturePath)
@@ -91,19 +95,24 @@ namespace GK_P2
         private void wrapper_Paint(object sender, PaintEventArgs e)
         {
             Interlocked.Increment(ref _frameCount);
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+           // Stopwatch sw = new Stopwatch();
+            //sw.Start();
 
-            using(FastBitmap bm = new FastBitmap(this.wrapper.Width, this.wrapper.Height))
+            using(AbstractBitmap bm = new CudaBitmap(this.wrapper.Width, this.wrapper.Height))
+            //using(AbstractBitmap bm = new FastBitmap(this.wrapper.Width, this.wrapper.Height))
             {
+                
                 this.sphere.Draw(e, bm, this.light);
+                
 
-
-                e.Graphics.DrawImage(bm.Bitmap, 0, 0);
+                //sw.Start();
+                e.Graphics.DrawImage(bm.GetBitmap(this.light), 0, 0);
+               // sw.Stop();
+                //Debug.WriteLine("Elapsed={0}", sw.Elapsed);
             }
 
             
-            sw.Stop();
+            //sw.Stop();
             //Debug.WriteLine("Elapsed={0}", sw.Elapsed);
         }
 

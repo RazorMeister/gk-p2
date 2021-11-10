@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GK_P2.Shape
 {
-    class Sphere
+    class Sphere : ISphere
     {
         private List<Triangle> triangleList;
 
@@ -24,8 +24,14 @@ namespace GK_P2.Shape
 
         public List<Triangle> GeTriangles() => this.triangleList;
 
-        public void Draw(PaintEventArgs e, FastBitmap bm, Point light)
+        public void Draw(PaintEventArgs e, AbstractBitmap bm, Point light)
         {
+            if (Settings.EditMode == true)
+            {
+                this.triangleList.ForEach(triangle => triangle.Draw(e, bm, light));
+                return;
+            }
+
             int range = this.triangleList.Count / 100;
 
             Parallel.For(0, (int)Math.Ceiling((double)this.triangleList.Count / range), num =>
@@ -34,7 +40,7 @@ namespace GK_P2.Shape
                 {
                     int index = num * range + i;
                     if (index >= this.triangleList.Count) break;
-                    this.triangleList[index].Draw(e, bm, light);
+                    this.triangleList[index].Generate(bm, light);
                 }
 
             });

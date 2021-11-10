@@ -8,11 +8,15 @@ namespace GK_P2.Filler
 {
     class Filler
     {
-        public static void FillPolygon(List<Point> points, Color color, FastBitmap bm, Func<int, int, Color> getColorFunc = null)
-        {
+        public static void FillPolygon(
+            List<Point> points, Color color, 
+            AbstractBitmap bm, 
+            Func<int, int, Color> getColorFunc = null,
+            Func<int, int, PixelStruct> getPixelStructFunc = null
+        ) {
             List<int> ind;
             int yMin, yMax;
-            (ind, yMin, yMax) = Filler.SortVertices(points);
+            ind = Filler.SortVertices(points, out yMin, out yMax);
 
             // Algorytm scanlinii
             List<NodeAET> AET = new List<NodeAET>();
@@ -56,8 +60,12 @@ namespace GK_P2.Filler
                     int xMax = (int)AET[i + 1].x;
 
                     for (int x = xMin; x <= xMax; x++)
-                        bm.SetPixel(x, y, getColorFunc != null ? getColorFunc(x, y) : color);
-
+                    {
+                        if (bm.GetType() == typeof(FastBitmap))
+                            bm.SetPixel(x, y, getColorFunc != null ? getColorFunc(x, y) : color);
+                        else
+                            ((CudaBitmap)bm).SetPixel(x, y, getPixelStructFunc(x, y));
+                    }
                 }
 
                 // Uaktualnienie wartości x dla nowej scanlinii
@@ -68,7 +76,7 @@ namespace GK_P2.Filler
             }
         }
 
-        private static (List<int>, int, int) SortVertices(List<Point> points)
+        private static List<int> SortVertices(List<Point> points, out int yMin, out int yMax)
         {
             List<int> sortedIndexes = new List<int>();
             for (int i = 0; i < points.Count(); i++)
@@ -81,7 +89,10 @@ namespace GK_P2.Filler
                 return 1;
             });
 
-            return (sortedIndexes, points[sortedIndexes[0]].Y, points[sortedIndexes[sortedIndexes.Count - 1]].Y);
+            yMin = points[sortedIndexes[0]].Y;
+            yMax = points[sortedIndexes[sortedIndexes.Count - 1]].Y;
+
+            return sortedIndexes;
         }
     }
 }

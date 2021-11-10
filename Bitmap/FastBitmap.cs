@@ -9,26 +9,19 @@ using System.Threading.Tasks;
 
 namespace GK_P2.Bitmap
 {
-    public class FastBitmap : IDisposable
+    public class FastBitmap : AbstractBitmap
     {
-        public System.Drawing.Bitmap Bitmap { get; private set; }
         public Int32[] Bits { get; private set; }
-        public bool Disposed { get; private set; }
-        public int Height { get; private set; }
-        public int Width { get; private set; }
-
         protected GCHandle BitsHandle { get; private set; }
 
-        public FastBitmap(int width, int height)
+        public FastBitmap(int width, int height) : base(width, height)
         {
-            Width = width;
-            Height = height;
-            Bits = new Int32[width * height];
+            Bits = new Int32[this.N];
             BitsHandle = GCHandle.Alloc(Bits, GCHandleType.Pinned);
-            Bitmap = new System.Drawing.Bitmap(width, height, width * 4, PixelFormat.Format32bppPArgb, BitsHandle.AddrOfPinnedObject());
+            Bitmap = new System.Drawing.Bitmap(width, height, this.Stripe, PixelFormat.Format32bppPArgb, BitsHandle.AddrOfPinnedObject());
         }
 
-        public void SetPixel(int x, int y, Color color)
+        public override void SetPixel(int x, int y, Color color)
         {
             int index = x + (y * Width);
             Bits[index] = color.ToArgb();
@@ -43,12 +36,10 @@ namespace GK_P2.Bitmap
             return result;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
-            if (Disposed) return;
-            Disposed = true;
-            Bitmap.Dispose();
             BitsHandle.Free();
+            base.Dispose();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using GK_P2.Bitmap;
@@ -43,29 +44,36 @@ namespace GK_P2.Shape
             this.MidPoint = new Point3d() { X = x, Y = y, Z = z };
         } 
 
-        public void Draw(PaintEventArgs e, FastBitmap bm, Point light)
+        public void Draw(PaintEventArgs e, AbstractBitmap bm, Point light)
         {
-            Color color = this.GetFillColorForPixel(light, this.MidPoint.X, this.MidPoint.Y, this.MidPoint.Z);
+            Pen pen = new Pen(Color.FromArgb(255, 0, 0, 0));
+            e.Graphics.DrawLine(pen, Point1.ToPoint(), Point2.ToPoint());
+            e.Graphics.DrawLine(pen, Point1.ToPoint(), Point3.ToPoint());
+            e.Graphics.DrawLine(pen, Point2.ToPoint(), Point3.ToPoint());
+
+            e.Graphics.FillEllipse(Brushes.Black, new Rectangle((int)(this.Point1.X - 3), (int)(this.Point1.Y - 3), 6, 6));
+            e.Graphics.FillEllipse(Brushes.Black, new Rectangle((int)(this.Point2.X - 3), (int)(this.Point2.Y - 3), 6, 6));
+            e.Graphics.FillEllipse(Brushes.Black, new Rectangle((int)(this.Point3.X - 3), (int)(this.Point3.Y - 3), 6, 6));
+
+        }//(x, y) => this.GetFillColorForPixel(light, x, y, this.MidPoint.Z)
+
+        public void Generate(AbstractBitmap bm, Point light)
+        {
+            /*Color color = this.GetFillColorForPixel(light, this.MidPoint.X, this.MidPoint.Y, this.MidPoint.Z);*/
 
             var points = new List<Point>();
             points.Add(this.Point1.ToPoint());
             points.Add(this.Point2.ToPoint());
             points.Add(this.Point3.ToPoint());
 
-            if (Settings.EditMode)
-            {
-                Pen pen = new Pen(Color.FromArgb(255, 0, 0, 0));
-                e.Graphics.DrawLine(pen, Point1.ToPoint(), Point2.ToPoint());
-                e.Graphics.DrawLine(pen, Point1.ToPoint(), Point3.ToPoint());
-                e.Graphics.DrawLine(pen, Point2.ToPoint(), Point3.ToPoint());
-
-                e.Graphics.FillEllipse(Brushes.Black, new Rectangle((int)(this.Point1.X - 3), (int)(this.Point1.Y - 3), 6, 6));
-                e.Graphics.FillEllipse(Brushes.Black, new Rectangle((int)(this.Point2.X - 3), (int)(this.Point2.Y - 3), 6, 6));
-                e.Graphics.FillEllipse(Brushes.Black, new Rectangle((int)(this.Point3.X - 3), (int)(this.Point3.Y - 3), 6, 6));
-            }
-            else
-                Filler.Filler.FillPolygon(points, color, bm);
-        }//(x, y) => this.GetFillColorForPixel(light, x, y, this.MidPoint.Z)
+            Filler.Filler.FillPolygon(
+                points: points, 
+                color: Color.Black,
+                bm: bm,
+                getColorFunc: (x, y) => this.GetFillColorForPixel(light, x, y, this.MidPoint.Z),
+                getPixelStructFunc: (x, y) => this.GetPixelStructForPixel(light, x, y, this.MidPoint.Z)
+            );
+        }
 
         private int[] GetObjectColor(double x, double y, double z)
         {
@@ -94,9 +102,21 @@ namespace GK_P2.Shape
             return (Settings.K * this.Normal.ToVersor() + (1 - Settings.K) * Settings.NormalMap[x, y]).ToVersor();
         }
 
+        private PixelStruct GetPixelStructForPixel(Point light, double x, double y, double z)
+        {
+            int[] objectColor = this.GetObjectColor(x, y, z);
+            Vector3d N = this.GetNormalVersor((int)x, (int)y);
+
+            return new PixelStruct(
+                new ColorStruct(objectColor[0], objectColor[1], objectColor[2]),
+                (float)z,
+                new PointStruct((float)N.X, (float)N.Y, (float)N.Z)
+            );
+        }
+
         private Color GetFillColorForPixel(Point light, double x, double y, double z)
         {
-            double[] lightColor = new double[] { Settings.LightColor.R / 255, Settings.LightColor.G / 255, Settings.LightColor.B / 255 };
+            double[] lightColor = new double[] { Settings.LightColor.R / (double)255, Settings.LightColor.G / (double)255, Settings.LightColor.B / (double)255 };
             int[] objectColor = this.GetObjectColor(x, y, z);
 
             if (!Settings.WithLight)
@@ -105,13 +125,14 @@ namespace GK_P2.Shape
             int[] returnColor = new int[] { 0, 0, 0 };
 
             Vector3d L = (new Vector3d() { X = (light.X - x), Y = (light.Y - y), Z = (Settings.LightZ - z) }).ToVersor();
+
             Vector3d N = this.GetNormalVersor((int)x, (int)y);
 
             double nCosL = N.ScalarProduct(L);
 
-            Vector3d R = N * (2 * nCosL) - L;
+            Vector3d R = (N * (2 * nCosL) - L).ToVersor();
 
-            double first = Settings.Kd * Math.Max(nCosL, 0);
+            double first = Settings.Kd * Math.Max(nCosL, 0.0);
 
             // Because vCosR = v scalar product r, and v.x = v.y = 0 and v.z = 1
             double vCosR = R.Z;
