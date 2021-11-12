@@ -20,7 +20,7 @@ namespace GK_P2
         private Point light = new Point();
         private double phi = 0;
         private double r = 0;
-        private double deltaR = 5;
+        private double deltaR = Settings.ANIMATION_SPEED * 2;
 
         DateTime _lastCheckTime = DateTime.Now;
         long _frameCount = 0;
@@ -38,6 +38,7 @@ namespace GK_P2
 
             this.debugPanelLabel.Text = $"Sphere | Center ({Settings.CENTER_X}, {Settings.CENTER_Y}, {Settings.CENTER_Z}) | Radius {Settings.SPHERE_R}";
 
+            // Check CUDA support
             try
             {
                 CudaHelper.Initialize();
@@ -49,23 +50,21 @@ namespace GK_P2
                 Settings.CUDASupported = false;
             }
 
-            this.InitAnimation();
 
+            // Triangulate sphere
             this.sphere.Triangulate();
 
+            // Init light animation
+            this.InitAnimation();
+
+            // Set wrapper background
             System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(this.wrapper.Width, this.wrapper.Height);
             Graphics g = Graphics.FromImage(bmp);
             g.Clear(Color.FromArgb(255, 127, 127, 255));
             this.wrapper.Image = bmp;
 
+            // Load texture
             this.LoadTexture();
-
-            var timer = new System.Timers.Timer();
-            timer.Interval = 100;
-            timer.Elapsed += showFps;
-            timer.Enabled = true;
-
-            this.wrapper.Invalidate();
         }
 
         private async void LoadTextureHelper(string texturePath)
@@ -97,7 +96,7 @@ namespace GK_P2
         private void InitAnimation()
         {
             timer = new System.Timers.Timer();
-            timer.Interval = 50;
+            timer.Interval = Settings.ANIMATION_INTERVAL;
             timer.Elapsed += animate;
             timer.Enabled = true;
         }
@@ -119,16 +118,23 @@ namespace GK_P2
                 this.sphere.Draw(e, bm, this.light);
                 e.Graphics.DrawImage(bm.GetBitmap(this.light), 0, 0);
             }
+
+            e.Graphics.DrawString(
+                $"FPS: {this.GetFps().ToString()}",
+                new Font("Consolas", 9, FontStyle.Bold),
+                Brushes.Black,
+                this.wrapper.Width - 60,
+                4
+            );
         }
 
-        // called every once in a while
         double GetFps()
         {
             double secondsElapsed = (DateTime.Now - _lastCheckTime).TotalSeconds;
             long count = Interlocked.Exchange(ref _frameCount, 0);
             double fps = count / secondsElapsed;
             _lastCheckTime = DateTime.Now;
-            return fps;
+            return Math.Round(fps);
         }
 
         private void showFps(Object source, System.Timers.ElapsedEventArgs e)
@@ -140,13 +146,13 @@ namespace GK_P2
         {
             if (!Settings.LightAnimationOn) return;
 
-            this.phi += 0.1;
+            this.phi += Settings.ANIMATION_SPEED * 0.05;
             if (this.r > 400 || this.r < 0) this.deltaR = -this.deltaR;
 
             this.r += this.deltaR;
 
-            this.light.X = (int)(this.r * Math.Cos(this.phi) + 250);
-            this.light.Y = (int)(this.r * Math.Sin(this.phi) + 250);
+            this.light.X = (int)(this.r * Math.Cos(this.phi) + Settings.WRAPPER_WIDTH / 2);
+            this.light.Y = (int)(this.r * Math.Sin(this.phi) + Settings.WRAPPER_HEIGHT / 2);
 
             this.wrapper.Invalidate();
         }
@@ -248,6 +254,9 @@ namespace GK_P2
         {
             if (Settings.WithLight)
             {
+                Settings.CUDAMode = false;
+                this.cudaModeCheckbox.Checked = false;
+                this.cudaModeCheckbox.Enabled = false;
                 this.withLightButton.BackColor = Color.WhiteSmoke;
                 this.withLightButton.Text = "Light OFF";
                 this.lightAnimationButton.Enabled = false;
@@ -255,7 +264,7 @@ namespace GK_P2
             }
             else
             {
-                Settings.CUDAMode = false;
+                this.cudaModeCheckbox.Enabled = true;
                 this.withLightButton.BackColor = Color.Yellow;
                 this.withLightButton.Text = "Light ON";
                 this.lightAnimationButton.Enabled = true;

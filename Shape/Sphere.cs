@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using GK_P2.Bitmap;
 using System.Threading.Tasks;
@@ -32,18 +34,6 @@ namespace GK_P2.Shape
                 return;
             }
 
-            /*int range = this.triangleList.Count / 100;
-
-            Parallel.For(0, (int)Math.Ceiling((double)this.triangleList.Count / range), num =>
-            {
-                for (int i = 0; i < range; i++)
-                {
-                    int index = num * range + i;
-                    if (index >= this.triangleList.Count) break;
-                    this.triangleList[index].Generate(bm, light);
-                }
-
-            });*/
             Parallel.For(0, this.triangleList.Count - 1, num => this.triangleList[num].Generate(bm, light));
         }
 

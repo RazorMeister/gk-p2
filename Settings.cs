@@ -9,6 +9,8 @@ namespace GK_P2
 {
     class Settings
     {
+        public const double ANIMATION_SPEED = 1.5;
+        public const int ANIMATION_INTERVAL = 20;
         public const int CENTER_X = 250;
         public const int CENTER_Y = 250;
         public const int CENTER_Z = 0;

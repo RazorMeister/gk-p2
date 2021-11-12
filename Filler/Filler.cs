@@ -59,7 +59,7 @@ namespace GK_P2.Filler
                     int xMin = (int)AET[i].x;
                     int xMax = (int)AET[i + 1].x;
 
-                    for (int x = xMin; x <= xMax; x++)
+                    for (int x = xMin; x < xMax; x++)
                     {
                         if (bm.GetType() == typeof(FastBitmap))
                             bm.SetPixel(x, y, getColorFunc != null ? getColorFunc(x, y) : color);
