@@ -22,8 +22,8 @@ namespace GK_P2
         private double r = 0;
         private double deltaR = Settings.ANIMATION_SPEED * 2;
 
-        DateTime _lastCheckTime = DateTime.Now;
-        long _frameCount = 0;
+        DateTime lastCheckTime = DateTime.Now;
+        long frameCount = 0;
 
         private System.Timers.Timer timer;
 
@@ -47,6 +47,12 @@ namespace GK_P2
             {
                 this.cudaModeCheckbox.Enabled = false;
                 this.cudaSupportedLabel.Text = "Not supported on this device";
+                Settings.CUDASupported = false;
+            }
+            catch (Exception e)
+            {
+                this.cudaModeCheckbox.Enabled = false;
+                this.cudaSupportedLabel.Text = "Something went wrong";
                 Settings.CUDASupported = false;
             }
 
@@ -97,7 +103,7 @@ namespace GK_P2
         {
             timer = new System.Timers.Timer();
             timer.Interval = Settings.ANIMATION_INTERVAL;
-            timer.Elapsed += animate;
+            timer.Elapsed += Animate;
             timer.Enabled = true;
         }
 
@@ -111,7 +117,7 @@ namespace GK_P2
 
         private void wrapper_Paint(object sender, PaintEventArgs e)
         {
-            Interlocked.Increment(ref _frameCount);
+            Interlocked.Increment(ref frameCount);
 
             using(AbstractBitmap bm = this.CreateBitmap())
             {
@@ -128,21 +134,16 @@ namespace GK_P2
             );
         }
 
-        double GetFps()
+        private double GetFps()
         {
-            double secondsElapsed = (DateTime.Now - _lastCheckTime).TotalSeconds;
-            long count = Interlocked.Exchange(ref _frameCount, 0);
+            double secondsElapsed = (DateTime.Now - lastCheckTime).TotalSeconds;
+            long count = Interlocked.Exchange(ref frameCount, 0);
             double fps = count / secondsElapsed;
-            _lastCheckTime = DateTime.Now;
+            lastCheckTime = DateTime.Now;
             return Math.Round(fps);
         }
 
-        private void showFps(Object source, System.Timers.ElapsedEventArgs e)
-        {
-            Debug.WriteLine($"Fps - {this.GetFps().ToString()}");
-        }
-
-        private void animate(Object source, System.Timers.ElapsedEventArgs e)
+        private void Animate(Object source, System.Timers.ElapsedEventArgs e)
         {
             if (!Settings.LightAnimationOn) return;
 
@@ -155,298 +156,6 @@ namespace GK_P2
             this.light.Y = (int)(this.r * Math.Sin(this.phi) + Settings.WRAPPER_HEIGHT / 2);
 
             this.wrapper.Invalidate();
-        }
-
-        private void PauseAnimation(Action func)
-        {
-            bool lastAnimationOn = Settings.LightAnimationOn;
-            Settings.LightAnimationOn = false;
-
-            func();
-
-            Settings.LightAnimationOn = lastAnimationOn;
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            Settings.LightZ = Int32.Parse(this.lightZTextBox.Text);
-
-            this.wrapper.Invalidate();
-        }
-
-        private void densityTrackBar_Scroll(object sender, EventArgs e)
-        {
-            this.sphereDensityLabel.Text = this.densityTrackBar.Value.ToString();
-            Settings.SetSphereDensityFromTrackBar(this.densityTrackBar.Value);
-
-            this.sphere.Triangulate();
-
-            this.wrapper.Invalidate();
-        }
-
-        private void kdTrackBar_Scroll(object sender, EventArgs e)
-        {
-            Settings.Kd = this.kdTrackBar.Value * 0.1;
-            this.kdLabel.Text = Settings.Kd.ToString();
-            this.wrapper.Invalidate();
-        }
-
-        private void ksTrackBar_Scroll(object sender, EventArgs e)
-        {
-            Settings.Ks = this.ksTrackBar.Value * 0.1;
-            this.ksLabel.Text = Settings.Ks.ToString();
-            this.wrapper.Invalidate();
-        }
-
-        private void mTrackBar_Scroll(object sender, EventArgs e)
-        {
-            Settings.M = this.mTrackBar.Value;
-            this.mLabel.Text = Settings.M.ToString();
-            this.wrapper.Invalidate();
-        }
-
-        private void lightAnimationButton_Click(object sender, EventArgs e)
-        {
-            if (Settings.LightAnimationOn)
-            {
-                this.lightAnimationButton.BackColor = Color.WhiteSmoke;
-                this.lightAnimationButton.Text = "Animation OFF";
-                this.withLightButton.Enabled = true;
-                Settings.LightAnimationOn = false;
-            }
-            else
-            {
-                this.lightAnimationButton.BackColor = Color.Yellow;
-                this.lightAnimationButton.Text = "Animation ON";
-                this.withLightButton.Enabled = false;
-                Settings.LightAnimationOn = true;
-            }
-
-            this.wrapper.Invalidate();
-        }
-
-        private void lightColorButton_Click(object sender, EventArgs e)
-        {
-            this.PauseAnimation(() =>
-            {
-                ColorDialog MyDialog = new ColorDialog();
-                MyDialog.AllowFullOpen = false;
-                MyDialog.ShowHelp = true;
-                MyDialog.Color = this.lightColorButton.BackColor;
-
-                if (MyDialog.ShowDialog() == DialogResult.OK)
-                {
-                    var color = MyDialog.Color;
-
-                    this.lightColorButton.BackColor = color;
-                    Settings.LightColor = color;
-
-                    // Algorithm found on the Internet for contrasting foreColor
-                    // https://betterprogramming.pub/generate-contrasting-text-for-your-random-background-color-ac302dc87b4
-                    var edge = (color.R * 299 + color.G * 587 + color.B * 114) / 1000;
-                    this.lightColorButton.ForeColor = edge < 128 ? Color.White : Color.Black;
-                    this.wrapper.Invalidate();
-                }
-            });
-        }
-
-        private void withLightButton_Click(object sender, EventArgs e)
-        {
-            if (Settings.WithLight)
-            {
-                Settings.CUDAMode = false;
-                this.cudaModeCheckbox.Checked = false;
-                this.cudaModeCheckbox.Enabled = false;
-                this.withLightButton.BackColor = Color.WhiteSmoke;
-                this.withLightButton.Text = "Light OFF";
-                this.lightAnimationButton.Enabled = false;
-                Settings.WithLight = false;
-            }
-            else
-            {
-                this.cudaModeCheckbox.Enabled = true;
-                this.withLightButton.BackColor = Color.Yellow;
-                this.withLightButton.Text = "Light ON";
-                this.lightAnimationButton.Enabled = true;
-                Settings.WithLight = true;
-            }
-
-            this.wrapper.Invalidate();
-        }
-
-        private void objectTextureRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            if (this.objectTextureRadioButton.Checked)
-            {
-                Settings.ObjectFillType = Settings.ObjectFillTypeEnum.TEXTURE;
-                this.wrapper.Invalidate();
-            }
-        }
-
-        private void objectSolidColorRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            if (this.objectSolidColorRadioButton.Checked)
-            {
-                Settings.ObjectFillType = Settings.ObjectFillTypeEnum.SOLID_COLOR;
-                this.wrapper.Invalidate();
-            }
-        }
-
-        private void objectSolidColorButton_Click(object sender, EventArgs e)
-        {
-            this.PauseAnimation(() =>
-            {
-                ColorDialog MyDialog = new ColorDialog();
-                MyDialog.AllowFullOpen = false;
-                MyDialog.ShowHelp = true;
-                MyDialog.Color = this.objectSolidColorButton.BackColor;
-
-                if (MyDialog.ShowDialog() == DialogResult.OK)
-                {
-                    var color = MyDialog.Color;
-
-                    this.objectSolidColorButton.BackColor = color;
-                    Settings.ObjectSolidColor = color;
-
-                    // Algorithm found on the Internet for contrasting foreColor
-                    // https://betterprogramming.pub/generate-contrasting-text-for-your-random-background-color-ac302dc87b4
-                    var edge = (color.R * 299 + color.G * 587 + color.B * 114) / 1000;
-                    this.objectSolidColorButton.ForeColor = edge < 128 ? Color.White : Color.Black;
-                    this.wrapper.Invalidate();
-                }
-            });
-
-        }
-
-        private void kTrackBar_Scroll(object sender, EventArgs e)
-        {
-            Settings.K = this.kTrackBar.Value * 0.1;
-            this.kLabel.Text = Settings.K.ToString();
-            this.wrapper.Invalidate();
-        }
-
-        private void loadTextureButton_Click(object sender, EventArgs e)
-        {
-            this.PauseAnimation(() =>
-            {
-                string workingDirectory = Environment.CurrentDirectory;
-
-                OpenFileDialog openFileDialog = new OpenFileDialog
-                {
-                    CheckFileExists = true,
-                    CheckPathExists = true,
-                    RestoreDirectory = true,
-                    InitialDirectory = Directory.GetParent(workingDirectory).Parent.FullName,
-                    Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;..."
-                };
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                    this.LoadTexture(openFileDialog.FileName);
-            });
-        }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (this.loadTextureThread != null && this.loadTextureThread.IsAlive)
-                this.loadTextureThread.Abort();
-        }
-
-        private void editModeCheckbox_CheckedChanged(object sender, EventArgs e)
-        {
-            Settings.EditMode = this.editModeCheckbox.Checked;
-
-            if (Settings.EditMode)
-            {
-                Settings.LightAnimationOn = false;
-                this.lightAnimationButton.BackColor = Color.WhiteSmoke;
-                this.lightAnimationButton.Text = "Animation OFF";
-                this.withLightButton.Enabled = false;
-
-                Settings.WithLight = false;
-                this.withLightButton.BackColor = Color.WhiteSmoke;
-                this.withLightButton.Text = "Light OFF";
-                this.lightAnimationButton.Enabled = false;
-
-                Settings.CUDAMode = false;
-            }
-            else
-            {
-                this.withLightButton.Enabled = true;
-            }
-
-            this.wrapper.Invalidate();
-        }
-
-        private void wrapper_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (!Settings.EditMode) return;
-
-            var triangles = this.sphere.GeTriangles();
-            this.lastMovingPoint = e.Location;
-
-            foreach (var triangle in triangles)
-            {
-                var nearestPoint = triangle.GetNearestPoint(e.Location);
-
-                if (nearestPoint != null)
-                {
-                    triangle.SelectedPoint = nearestPoint;
-                    this.movingTriangle = triangle;
-                    break;
-                }
-            }
-        }
-
-        private void wrapper_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (this.movingTriangle == null) return;
-
-            int dX = e.Location.X - this.lastMovingPoint.X;
-            int dY = e.Location.Y - this.lastMovingPoint.Y;
-
-            this.movingTriangle.SelectedPoint.X += dX;
-            this.movingTriangle.SelectedPoint.Y += dY;
-            this.movingTriangle.SetUp();
-
-            this.lastMovingPoint = e.Location;
-
-            this.wrapper.Invalidate();
-        }
-
-        private void wrapper_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (this.movingTriangle != null)
-                this.movingTriangle.SelectedPoint = null;
-
-            this.movingTriangle = null;
-        }
-
-        private void cudaModeCheckbox_CheckedChanged(object sender, EventArgs e)
-        {
-            Settings.CUDAMode = this.cudaModeCheckbox.Checked;
-            this.wrapper.Invalidate();
-        }
-
-        private void fillEachPixelRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            Settings.FillCalculation = Settings.FillCalculationEnum.EACH_PIXEL;
-            this.cudaModeCheckbox.Enabled = true;
-        }
-
-        private void fillInterpolationRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            Settings.FillCalculation = Settings.FillCalculationEnum.INTERPOLATION;
-            Settings.CUDAMode = false;
-            this.cudaModeCheckbox.Checked = false;
-            this.cudaModeCheckbox.Enabled = false;
-        }
-
-        private void fillOnePixelRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            Settings.FillCalculation = Settings.FillCalculationEnum.ONE_PIXEL;
-            Settings.CUDAMode = false;
-            this.cudaModeCheckbox.Checked = false;
-            this.cudaModeCheckbox.Enabled = false;
         }
     }
 }
