@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using GK_P2.Bitmap;
@@ -73,7 +74,7 @@ namespace GK_P2.Shape
             switch (Settings.FillCalculation)
             {
                 case Settings.FillCalculationEnum.EACH_PIXEL:
-                    getColorFunc = (x, y) => this.GetFillColorForPixel(light, x, y, this.MidPoint.Z);
+                    getColorFunc = (x, y) => this.GetFillColorForPixel(light, x, y, this.GetZ(x, y));
                     break;
                 case Settings.FillCalculationEnum.INTERPOLATION:
                     Color p1Color = this.GetFillColorForPixel(light, this.Point1.X, this.Point1.Y, this.Point1.Z);
@@ -98,6 +99,10 @@ namespace GK_P2.Shape
 
         private int[] GetObjectColor(double x, double y, double z)
         {
+
+            Color solidColor1 = Settings.ObjectSolidColor;
+            return new int[] { solidColor1.R, solidColor1.G, solidColor1.B };
+
             switch (Settings.ObjectFillType)
             {
                 case Settings.ObjectFillTypeEnum.SOLID_COLOR:
@@ -115,16 +120,29 @@ namespace GK_P2.Shape
             }
         }
 
+        private double GetZ(int x, int y)
+        {
+            double xDistance = Math.Pow(x - Settings.CENTER_X, 2);
+            double yDistance = Math.Pow(y - Settings.CENTER_Y, 2);
+
+            return Math.Sqrt(Settings.SPHERE_R * Settings.SPHERE_R - xDistance - yDistance);
+        }
+
         private Vector3d GetNormalVersor(int x, int y)
         {
+            int x1 = x - Settings.CENTER_X;
+            int y1 = y - Settings.CENTER_Y;
+
+            Vector3d n = (new Vector3d() { X = x1, Y = y1, Z = Math.Sqrt(Settings.SPHERE_R * Settings.SPHERE_R + x1 * x1 + y1 * y1) }).ToVersor();
+
             if (
-                Settings.ObjectFillType == Settings.ObjectFillTypeEnum.SOLID_COLOR 
+                Settings.ObjectFillType == Settings.ObjectFillTypeEnum.SOLID_COLOR
                 || !Settings.TextureLoaded
                 || (x >= Settings.NormalMap.GetLength(0) || y >= Settings.NormalMap.GetLength(1))
             )
-                return this.Normal;
+                return n;
 
-            return (Settings.K * this.Normal + (1 - Settings.K) * Settings.NormalMap[x, y]).ToVersor();
+            return (Settings.K * n + (1 - Settings.K) * Settings.NormalMap[x, y]).ToVersor();
         }
 
         private PixelStruct GetPixelStructForPixel(Point light, double x, double y, double z)
@@ -192,9 +210,9 @@ namespace GK_P2.Shape
             double first = Settings.Kd * Math.Max(nCosL, 0.0);
 
             // Because vCosR = v scalar product r, and v.x = v.y = 0 and v.z = 1
-            double vCosR = R.Z;
+            double vCosR = Math.Max(R.Z, 0.0);
 
-            double second = Settings.Ks * Math.Pow(vCosR, Settings.M);
+            double second = vCosR > 0 ? Settings.Ks * Math.Pow(vCosR, Settings.M) : 0.0;
 
             for (int i = 0; i < 3; i++)
             {
