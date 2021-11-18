@@ -69,55 +69,40 @@ namespace GK_P2.Shape
             points.Add(this.Point3.ToPoint());
 
             var color = Color.Black;
-            Func<int, int, Color> getColorFunc = null;
+            Action<int, int> callback = null;
 
             switch (Settings.FillCalculation)
             {
                 case Settings.FillCalculationEnum.EACH_PIXEL:
-                    getColorFunc = (x, y) => this.GetFillColorForPixel(light, x, y, this.GetZ(x, y));
+                    if (bm.GetType() == typeof(CudaBitmap))
+                        callback = (x, y) => ((CudaBitmap)bm).SetPixel(x, y, this.GetPixelStructForPixel(light, x, y, this.GetZ(x, y)));
+                    else
+                        callback = (x, y) => bm.SetPixel(x, y, this.GetFillColorForPixel(light, x, y, this.GetZ(x, y)));
+
                     break;
                 case Settings.FillCalculationEnum.INTERPOLATION:
                     Color p1Color = this.GetFillColorForPixel(light, this.Point1.X, this.Point1.Y, this.Point1.Z);
                     Color p2Color = this.GetFillColorForPixel(light, this.Point2.X, this.Point2.Y, this.Point2.Z);
                     Color p3Color = this.GetFillColorForPixel(light, this.Point3.X, this.Point3.Y, this.Point3.Z);
-                    getColorFunc = (x, y) => this.InterpolateColorForPixel(x, y, p1Color, p2Color, p3Color);
+                    callback = (x, y) => bm.SetPixel(x, y, this.InterpolateColorForPixel(x, y, p1Color, p2Color, p3Color));
                     break;
                 case Settings.FillCalculationEnum.ONE_PIXEL:
-                    color = this.GetFillColorForPixel(light, this.MidPoint.X, this.MidPoint.Y, this.MidPoint.Z);
+                    Color wholeColor =
+                        this.GetFillColorForPixel(light, this.MidPoint.X, this.MidPoint.Y, this.MidPoint.Z);
+                    callback = (x, y) => bm.SetPixel(x, y, wholeColor);
                     break;
             }
 
-
             Filler.Filler.FillPolygon(
-                points: points, 
-                color: color,
-                bm: bm,
-                getColorFunc: getColorFunc,
-                getPixelStructFunc: (x, y) => this.GetPixelStructForPixel(light, x, y, this.MidPoint.Z)
+                points, 
+                callback
             );
         }
 
         private int[] GetObjectColor(double x, double y, double z)
         {
-
             Color solidColor1 = Settings.ObjectSolidColor;
             return new int[] { solidColor1.R, solidColor1.G, solidColor1.B };
-
-            switch (Settings.ObjectFillType)
-            {
-                case Settings.ObjectFillTypeEnum.SOLID_COLOR:
-                    Color solidColor = Settings.ObjectSolidColor;
-                    return new int[] { solidColor.R, solidColor.G, solidColor.B };
-                case Settings.ObjectFillTypeEnum.TEXTURE:
-                    return new int[]
-                    {
-                        (int)(((x - (Settings.CENTER_X - Settings.SPHERE_R)) / (Settings.SPHERE_R * 2)) * 255),
-                        (int)((((Settings.CENTER_Y + Settings.SPHERE_R) - y) / (Settings.SPHERE_R * 2)) * 255),
-                        (int)((z / Settings.SPHERE_R) * 255)
-                    };
-                default:
-                    throw new Exception("Invalid ObjectFillType");
-            }
         }
 
         private double GetZ(int x, int y)
@@ -142,7 +127,18 @@ namespace GK_P2.Shape
             )
                 return n;
 
-            return (Settings.K * n + (1 - Settings.K) * Settings.NormalMap[x, y]).ToVersor();
+            Vector3d B = n.CrossProduct(new Vector3d() { X = 0, Y = 0, Z = 1 });
+            Vector3d T = B.CrossProduct(n);
+            Vector3d tN = Settings.NormalMap[x, y];
+
+            Vector3d fromMatrix = new Vector3d()
+            {
+                X = tN.X * T.X + tN.Y * B.X + tN.Z + n.X,
+                Y = tN.X * T.Y + tN.Y * B.Y + tN.Z + n.Y,
+                Z = tN.X * T.Z + tN.Y * B.Z + tN.Z + n.Z,
+            }.ToVersor();
+
+            return (Settings.K * n + (1 - Settings.K) * fromMatrix).ToVersor();
         }
 
         private PixelStruct GetPixelStructForPixel(Point light, double x, double y, double z)

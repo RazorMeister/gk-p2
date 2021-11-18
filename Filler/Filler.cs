@@ -9,10 +9,8 @@ namespace GK_P2.Filler
     class Filler
     {
         public static void FillPolygon(
-            List<Point> points, Color color, 
-            AbstractBitmap bm, 
-            Func<int, int, Color> getColorFunc = null,
-            Func<int, int, PixelStruct> getPixelStructFunc = null
+            List<Point> points, 
+            Action<int, int> callback
         ) {
             List<int> ind;
             int yMin, yMax;
@@ -60,12 +58,7 @@ namespace GK_P2.Filler
                     int xMax = (int)AET[i + 1].x;
 
                     for (int x = xMin; x < xMax; x++)
-                    {
-                        if (bm.GetType() == typeof(FastBitmap))
-                            bm.SetPixel(x, y, getColorFunc != null ? getColorFunc(x, y) : color);
-                        else
-                            ((CudaBitmap)bm).SetPixel(x, y, getPixelStructFunc(x, y));
-                    }
+                        callback(x, y);
                 }
 
                 // Uaktualnienie wartości x dla nowej scanlinii
