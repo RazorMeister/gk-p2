@@ -95,6 +95,7 @@ namespace GK_P2
             {
                 this.LoadTextureHelper(texturePath);
                 Settings.TextureLoaded = true;
+                this.sphere.SetUp();
             });
             this.loadTextureThread.Start();
         }

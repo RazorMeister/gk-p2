@@ -37,6 +37,11 @@ namespace GK_P2.Shape
             Parallel.For(0, this.triangleList.Count - 1, num => this.triangleList[num].Generate(bm, light));
         }
 
+        public void SetUp()
+        {
+            Parallel.For(0, this.triangleList.Count - 1, num => this.triangleList[num].SetUp());
+        }
+
         public void Triangulate()
         {
             this.triangleList = new List<Triangle>();

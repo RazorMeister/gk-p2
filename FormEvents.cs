@@ -83,6 +83,7 @@ namespace GK_P2
         {
             Settings.K = this.kTrackBar.Value * 0.1;
             this.kLabel.Text = Settings.K.ToString();
+            this.sphere.SetUp();
             this.wrapper.Invalidate();
         }
         #endregion
@@ -147,7 +148,11 @@ namespace GK_P2
 
         private void objectSolidColorButton_Click(object sender, EventArgs e)
         {
-            this.SetColorDialog(this.objectSolidColorButton, (color) => Settings.ObjectSolidColor = color);
+            this.SetColorDialog(this.objectSolidColorButton, (color) =>
+            {
+                Settings.ObjectSolidColor = color;
+                this.sphere.SetUp();
+            });
         }
 
         private void loadTextureButton_Click(object sender, EventArgs e)
@@ -223,6 +228,7 @@ namespace GK_P2
             if (this.objectTextureRadioButton.Checked)
             {
                 Settings.ObjectFillType = Settings.ObjectFillTypeEnum.TEXTURE;
+                this.sphere.SetUp();
                 this.wrapper.Invalidate();
             }
         }
@@ -232,6 +238,7 @@ namespace GK_P2
             if (this.objectSolidColorRadioButton.Checked)
             {
                 Settings.ObjectFillType = Settings.ObjectFillTypeEnum.SOLID_COLOR;
+                this.sphere.SetUp();
                 this.wrapper.Invalidate();
             }
         }
@@ -280,6 +287,7 @@ namespace GK_P2
             }
             else
             {
+                this.sphere.SetUp();
                 this.withLightButton.Enabled = true;
             }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using GK_P2.Bitmap;
@@ -14,6 +13,8 @@ namespace GK_P2.Shape
         public Point3d Point3 { get; set; }
         public Point3d MidPoint { get; set; }
         public double Field { get; private set; }
+        public Dictionary<Point, Point3d> Pixels { get; private set; }
+        public Dictionary<Point, Vector3d> NormalVectors { get; private set; }
 
         public Point3d SelectedPoint { get; set; } = null;
 
@@ -21,13 +22,30 @@ namespace GK_P2.Shape
 
         public void SetUp()
         {
-            double x = (this.Point1.X + this.Point2.X + this.Point3.X) / 3.0;
-            double y = (this.Point1.Y + this.Point2.Y + this.Point3.Y) / 3.0;
-            double z = (this.Point1.Z + this.Point2.Z + this.Point3.Z) / 3.0;
+            double middleX = (this.Point1.X + this.Point2.X + this.Point3.X) / 3.0;
+            double middleY = (this.Point1.Y + this.Point2.Y + this.Point3.Y) / 3.0;
+            double middleZ = (this.Point1.Z + this.Point2.Z + this.Point3.Z) / 3.0;
 
-            this.MidPoint = new Point3d() { X = x, Y = y, Z = z };
+            this.MidPoint = new Point3d() { X = middleX, Y = middleY, Z = middleZ };
 
             this.Field = this.GetTriangleField(this.Point1.ToPoint(), this.Point2.ToPoint(), this.Point3.ToPoint());
+
+            var points = new List<Point>();
+            points.Add(this.Point1.ToPoint());
+            points.Add(this.Point2.ToPoint());
+            points.Add(this.Point3.ToPoint());
+
+            this.Pixels = new Dictionary<Point, Point3d>();
+
+            Filler.Filler.FillPolygon(
+                points,
+                (x, y) => this.Pixels[new Point(x, y)] = new Point3d() { X = x, Y = y, Z = this.GetZ(x, y)}
+            );
+
+            this.NormalVectors = new Dictionary<Point, Vector3d>();
+
+            foreach (Point pixel in this.Pixels.Keys)
+                this.NormalVectors[pixel] = this.GetNormalVersor((int)pixel.X, (int)pixel.Y);
         }
 
         public static double PointsDistance(Point p1, Point p2)
@@ -58,26 +76,19 @@ namespace GK_P2.Shape
             e.Graphics.FillEllipse(Brushes.Black, new Rectangle((int)(this.Point2.X - 3), (int)(this.Point2.Y - 3), 6, 6));
             e.Graphics.FillEllipse(Brushes.Black, new Rectangle((int)(this.Point3.X - 3), (int)(this.Point3.Y - 3), 6, 6));
 
-        }//(x, y) => this.GetFillColorForPixel(light, x, y, this.MidPoint.Z)
+        }
 
         public void Generate(AbstractBitmap bm, Point light)
         {
-
-            var points = new List<Point>();
-            points.Add(this.Point1.ToPoint());
-            points.Add(this.Point2.ToPoint());
-            points.Add(this.Point3.ToPoint());
-
-            var color = Color.Black;
             Action<int, int> callback = null;
 
             switch (Settings.FillCalculation)
             {
                 case Settings.FillCalculationEnum.EACH_PIXEL:
                     if (bm.GetType() == typeof(CudaBitmap))
-                        callback = (x, y) => ((CudaBitmap)bm).SetPixel(x, y, this.GetPixelStructForPixel(light, x, y, this.GetZ(x, y)));
+                        callback = (x, y) => ((CudaBitmap)bm).SetPixel(x, y, this.GetPixelStructForPixel(light, x, y, this.Pixels[new Point(x, y)].Z));
                     else
-                        callback = (x, y) => bm.SetPixel(x, y, this.GetFillColorForPixel(light, x, y, this.GetZ(x, y)));
+                        callback = (x, y) => bm.SetPixel(x, y, this.GetFillColorForPixel(light, x, y, this.Pixels[new Point(x, y)].Z));
 
                     break;
                 case Settings.FillCalculationEnum.INTERPOLATION:
@@ -93,10 +104,8 @@ namespace GK_P2.Shape
                     break;
             }
 
-            Filler.Filler.FillPolygon(
-                points, 
-                callback
-            );
+            foreach (Point pixel in this.Pixels.Keys)
+                callback(pixel.X, pixel.Y);
         }
 
         private int[] GetObjectColor(double x, double y, double z)
@@ -141,10 +150,20 @@ namespace GK_P2.Shape
             return (Settings.K * n + (1 - Settings.K) * fromMatrix).ToVersor();
         }
 
+        private Vector3d GetSavedNormalVersor(int x, int y)
+        {
+            Point p = new Point(x, y);
+
+            if (this.NormalVectors.ContainsKey(p))
+                return this.NormalVectors[p];
+
+            return this.GetNormalVersor(x, y);
+        }
+
         private PixelStruct GetPixelStructForPixel(Point light, double x, double y, double z)
         {
             int[] objectColor = this.GetObjectColor(x, y, z);
-            Vector3d N = this.GetNormalVersor((int)x, (int)y);
+            Vector3d N = this.GetSavedNormalVersor((int)x, (int)y);
 
             return new PixelStruct(
                 new ColorStruct(objectColor[0], objectColor[1], objectColor[2]),
@@ -197,7 +216,7 @@ namespace GK_P2.Shape
 
             Vector3d L = (new Vector3d() { X = (light.X - x), Y = (light.Y - y), Z = (Settings.LightZ - z) }).ToVersor();
 
-            Vector3d N = this.GetNormalVersor((int)x, (int)y);
+            Vector3d N = this.GetSavedNormalVersor((int)x, (int)y);
 
             double nCosL = N.ScalarProduct(L);
 

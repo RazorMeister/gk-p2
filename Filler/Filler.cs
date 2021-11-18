@@ -6,7 +6,7 @@ using GK_P2.Bitmap;
 
 namespace GK_P2.Filler
 {
-    class Filler
+    public static class Filler
     {
         public static void FillPolygon(
             List<Point> points, 
@@ -16,42 +16,45 @@ namespace GK_P2.Filler
             int yMin, yMax;
             ind = Filler.SortVertices(points, out yMin, out yMax);
 
-            // Algorytm scanlinii
             List<NodeAET> AET = new List<NodeAET>();
 
-            for (int y = yMin; y <= yMax; y++) // y - numer scanlinii
+            for (int y = yMin; y <= yMax; y++)
             {
-                // Zaktualizowanie wierzchołków
                 for (int i = 0; i < ind.Count; i++)
                 {
-                    int curr = ind[i]; // aktualny wierzchołek
-                    if (points[curr].Y == y - 1) // Wierzchołek leży na poprzedniej scanlinii
+                    int curr = ind[i];
+
+                    if (points[curr].Y == y - 1)
                     {
-                        int prev = (ind[i] - 1); // poprzedni wierzchołek
+                        int prev = (ind[i] - 1);
                         if (prev < 0) prev = ind.Count - 1;
 
                         if (points[prev].Y > points[curr].Y) 
                             AET.Add(new NodeAET(points[prev], points[curr], y));
                         else if (points[prev].Y < points[curr].Y)
-                            AET.RemoveAll(node => (node.a == points[prev] && node.b == points[curr]) || (node.a == points[curr] && node.b == points[prev]));
+                            AET.RemoveAll(node => 
+                                (node.a == points[prev] && node.b == points[curr]) || (node.a == points[curr] && node.b == points[prev])
+                            );
 
-                        int next = (ind[i] + 1) % ind.Count; // następny wierzchołek
+                        int next = (ind[i] + 1) % ind.Count;
+
                         if (points[next].Y > points[curr].Y) 
                             AET.Add(new NodeAET(points[next], points[curr], y));
                         else if (points[next].Y < points[curr].Y) 
-                            AET.RemoveAll(node => (node.a == points[next] && node.b == points[curr]) || (node.a == points[curr] && node.b == points[next]));
+                            AET.RemoveAll(node => 
+                                (node.a == points[next] && node.b == points[curr]) || (node.a == points[curr] && node.b == points[next])
+                            );
                     }
                 }
 
-                // Posortowanie w kolejności rosnących X
+                
                 AET.Sort((NodeAET a, NodeAET b) =>
                 {
                     if (a.x == b.x) return 0;
-                    else if (a.x < b.x) return -1;
-                    else return 1;
+                    if (a.x < b.x) return -1;
+                    return 1;
                 });
 
-                // Wypełnienie pikseli pomiędzy kolejnymi krawędziami (0-1, 2-3, ...)
                 for (int i = 0; i < AET.Count - 1; i += 2)
                 {
                     int xMin = (int)AET[i].x;
@@ -61,11 +64,8 @@ namespace GK_P2.Filler
                         callback(x, y);
                 }
 
-                // Uaktualnienie wartości x dla nowej scanlinii
                 foreach (NodeAET node in AET)
-                {
                     node.UpdateX(y);
-                }
             }
         }
 

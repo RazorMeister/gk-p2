@@ -3,13 +3,13 @@ using System.Drawing;
 
 namespace GK_P2.Filler
 {
-    class NodeAET
+    public class NodeAET
     {
         public Point a;
         public Point b;
         public int yMax;
-        public double x; // punkt przecięcia ze scanlinią
-        public double d; // d = 1 / m, tj. odwrotność współczynnika kierunkowego prostej
+        public double x;
+        public double d;
 
         public NodeAET(Point a, Point b, int yScanLine)
         {
@@ -17,8 +17,10 @@ namespace GK_P2.Filler
             this.b = b;
 
             LineEquation eq = new LineEquation(a, b);
+
             this.d = 1 / eq.A;
             this.yMax = Math.Max(a.Y, b.Y);
+
             if (eq.verticalLine) this.x = eq.A;
             else this.x = ((double)yScanLine - eq.B) / eq.A;
         }
@@ -26,6 +28,7 @@ namespace GK_P2.Filler
         public void UpdateX(int yScanLine)
         {
             LineEquation eq = new LineEquation(a, b);
+
             if (eq.verticalLine) this.x = eq.A;
             else this.x = ((double)yScanLine - eq.B) / eq.A;
         }
