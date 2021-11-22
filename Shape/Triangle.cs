@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using GK_P2.Bitmap;
@@ -226,36 +227,58 @@ namespace GK_P2.Shape
         private Color GetFillColorForPixel(Point light, double x, double y, double z)
         {
             double[] lightColor = new double[] { Settings.LightColor.R / (double)255, Settings.LightColor.G / (double)255, Settings.LightColor.B / (double)255 };
-            int[] objectColor = this.GetObjectColor(x, y, z);
+            double[] reflectorColor = new double[] { 0, 0, 0 };
+            int[] objectColorTmp = this.GetObjectColor(x, y, z);
 
             if (!Settings.WithLight)
-                return Color.FromArgb(255, objectColor[0], objectColor[1], objectColor[2]);
+                return Color.FromArgb(255, objectColorTmp[0], objectColorTmp[1], objectColorTmp[2]);
+
+            double[] objectColor = new double[] { objectColorTmp[0] / 255.0, objectColorTmp[1] / 255.0, objectColorTmp[2] / 255.0 };
 
             int[] returnColor = new int[] { 0, 0, 0 };
 
             Vector3d L = (new Vector3d() { X = (light.X - x), Y = (light.Y - y), Z = (Settings.LightZ - z) }).ToVersor();
+            Vector3d ReflectorL = (new Vector3d() { X = -(x - Settings.CENTER_X) , Y = -(y - Settings.CENTER_Y), Z = -(z - Settings.ReflectorZ) }).ToVersor();
+            Vector3d ReflectorV = new Vector3d() { X = -Settings.ReflectorPoint.X, Y = -Settings.ReflectorPoint.Y, Z = Settings.ReflectorZ }.ToVersor();
+
+            Vector3d NegativeReflectorL = new Vector3d() { X = -ReflectorL.X, Y = -ReflectorL.Y, Z = -ReflectorL.Z }.ToVersor();
+            reflectorColor[0] = Math.Min(1, Math.Max(0.0, Math.Pow(NegativeReflectorL.ScalarProduct(ReflectorV), Settings.ReflectorM)));
 
             Vector3d N = this.GetSavedNormalVersor((int)x, (int)y);
 
+
+            // Light part helpers
             double nCosL = N.ScalarProduct(L);
-
             Vector3d R = (N * (2 * nCosL) - L).ToVersor();
-
-            double first = Settings.Kd * Math.Max(nCosL, 0.0);
-
             // Because vCosR = v scalar product r, and v.x = v.y = 0 and v.z = 1
             double vCosR = Math.Max(R.Z, 0.0);
 
-            double second = vCosR > 0 ? Settings.Ks * Math.Pow(vCosR, Settings.M) : 0.0;
+            double firstLight = Settings.Kd * Math.Max(nCosL, 0.0);
+            double secondLight = vCosR > 0 ? Settings.Ks * Math.Pow(vCosR, Settings.M) : 0.0;
+
+
+            // Reflector part helpers (similar to light parts)
+            double nCosReflectorL = N.ScalarProduct(ReflectorL);
+            Vector3d ReflectorR = (N * (2 * nCosReflectorL) - ReflectorL).ToVersor();
+            double ReflectorVCosR = Math.Max(ReflectorR.Z, 0.0);
+
+            double firstReflector = Settings.Kd * Math.Max(nCosReflectorL, 0.0);
+            double secondReflector = ReflectorVCosR > 0 ? Settings.Ks * Math.Pow(ReflectorVCosR, Settings.M) : 0.0;
+
 
             for (int i = 0; i < 3; i++)
             {
-                double iL = (double)lightColor[i];
-                double iO = (double)objectColor[i];
+                double iL = lightColor[i];
+                double iO = objectColor[i];
+                double iR = reflectorColor[i];
 
                 double iLiO = iL * iO;
+                double iRiO = iR * iO;
 
-                returnColor[i] = (int)(first * iLiO  + second * iLiO);
+                if (Settings.ReflectorOn)
+                    returnColor[i] = (int)((firstLight * iLiO  + secondLight * iLiO + firstReflector * iRiO + secondReflector * iRiO) * 255);
+                else
+                    returnColor[i] = (int)((firstLight * iLiO + secondLight * iLiO) * 255);
 
                 returnColor[i] = Math.Min(255, returnColor[i]);
                 returnColor[i] = Math.Max(0, returnColor[i]);

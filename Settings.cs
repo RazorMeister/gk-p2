@@ -44,6 +44,12 @@ namespace GK_P2
         public static bool TextureLoaded { get; set; } = false;
         public static FillCalculationEnum FillCalculation { get; set; } = FillCalculationEnum.EACH_PIXEL;
 
+        /* Reflector settings */
+        public static int ReflectorZ { get; set; } = 400;
+        public static bool ReflectorOn { get; set; } = false;
+        public static int ReflectorM { get; set; } = 50;
+        public static Point ReflectorPoint { get; set; } = new Point(-180, 0);
+
         /* Light settings */
         public static int LightZ { get; set; } = 260;
         public static bool LightAnimationOn { get; set; } = true;

@@ -64,12 +64,16 @@ namespace GK_P2
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.editModeCheckbox = new System.Windows.Forms.CheckBox();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
-            this.cudaModeCheckbox = new System.Windows.Forms.CheckBox();
             this.cudaSupportedLabel = new System.Windows.Forms.Label();
+            this.cudaModeCheckbox = new System.Windows.Forms.CheckBox();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.fillOnePixelRadioButton = new System.Windows.Forms.RadioButton();
             this.fillInterpolationRadioButton = new System.Windows.Forms.RadioButton();
             this.fillEachPixelRadioButton = new System.Windows.Forms.RadioButton();
-            this.fillOnePixelRadioButton = new System.Windows.Forms.RadioButton();
+            this.groupBox13 = new System.Windows.Forms.GroupBox();
+            this.reflectorCheckbox = new System.Windows.Forms.CheckBox();
+            this.reflectorZButton = new System.Windows.Forms.Button();
+            this.reflectorZTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.wrapper)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.densityTrackBar)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -90,6 +94,7 @@ namespace GK_P2
             this.groupBox10.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.groupBox12.SuspendLayout();
+            this.groupBox13.SuspendLayout();
             this.SuspendLayout();
             // 
             // wrapper
@@ -483,17 +488,6 @@ namespace GK_P2
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "CUDA mode";
             // 
-            // cudaModeCheckbox
-            // 
-            this.cudaModeCheckbox.AutoSize = true;
-            this.cudaModeCheckbox.Location = new System.Drawing.Point(10, 29);
-            this.cudaModeCheckbox.Name = "cudaModeCheckbox";
-            this.cudaModeCheckbox.Size = new System.Drawing.Size(100, 17);
-            this.cudaModeCheckbox.TabIndex = 0;
-            this.cudaModeCheckbox.Text = "CUDA mode on";
-            this.cudaModeCheckbox.UseVisualStyleBackColor = true;
-            this.cudaModeCheckbox.CheckedChanged += new System.EventHandler(this.cudaModeCheckbox_CheckedChanged);
-            // 
             // cudaSupportedLabel
             // 
             this.cudaSupportedLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -507,6 +501,17 @@ namespace GK_P2
             this.cudaSupportedLabel.TabIndex = 1;
             this.cudaSupportedLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // cudaModeCheckbox
+            // 
+            this.cudaModeCheckbox.AutoSize = true;
+            this.cudaModeCheckbox.Location = new System.Drawing.Point(10, 29);
+            this.cudaModeCheckbox.Name = "cudaModeCheckbox";
+            this.cudaModeCheckbox.Size = new System.Drawing.Size(100, 17);
+            this.cudaModeCheckbox.TabIndex = 0;
+            this.cudaModeCheckbox.Text = "CUDA mode on";
+            this.cudaModeCheckbox.UseVisualStyleBackColor = true;
+            this.cudaModeCheckbox.CheckedChanged += new System.EventHandler(this.cudaModeCheckbox_CheckedChanged);
+            // 
             // groupBox12
             // 
             this.groupBox12.Controls.Add(this.fillOnePixelRadioButton);
@@ -514,15 +519,26 @@ namespace GK_P2
             this.groupBox12.Controls.Add(this.fillEachPixelRadioButton);
             this.groupBox12.Location = new System.Drawing.Point(530, 354);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(392, 66);
+            this.groupBox12.Size = new System.Drawing.Size(199, 66);
             this.groupBox12.TabIndex = 22;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Object fill calculation";
             // 
+            // fillOnePixelRadioButton
+            // 
+            this.fillOnePixelRadioButton.AutoSize = true;
+            this.fillOnePixelRadioButton.Location = new System.Drawing.Point(115, 19);
+            this.fillOnePixelRadioButton.Name = "fillOnePixelRadioButton";
+            this.fillOnePixelRadioButton.Size = new System.Drawing.Size(69, 17);
+            this.fillOnePixelRadioButton.TabIndex = 2;
+            this.fillOnePixelRadioButton.Text = "One pixel";
+            this.fillOnePixelRadioButton.UseVisualStyleBackColor = true;
+            this.fillOnePixelRadioButton.CheckedChanged += new System.EventHandler(this.fillOnePixelRadioButton_CheckedChanged);
+            // 
             // fillInterpolationRadioButton
             // 
             this.fillInterpolationRadioButton.AutoSize = true;
-            this.fillInterpolationRadioButton.Location = new System.Drawing.Point(153, 19);
+            this.fillInterpolationRadioButton.Location = new System.Drawing.Point(9, 42);
             this.fillInterpolationRadioButton.Name = "fillInterpolationRadioButton";
             this.fillInterpolationRadioButton.Size = new System.Drawing.Size(83, 17);
             this.fillInterpolationRadioButton.TabIndex = 1;
@@ -543,22 +559,54 @@ namespace GK_P2
             this.fillEachPixelRadioButton.UseVisualStyleBackColor = true;
             this.fillEachPixelRadioButton.CheckedChanged += new System.EventHandler(this.fillEachPixelRadioButton_CheckedChanged);
             // 
-            // fillOnePixelRadioButton
+            // groupBox13
             // 
-            this.fillOnePixelRadioButton.AutoSize = true;
-            this.fillOnePixelRadioButton.Location = new System.Drawing.Point(292, 19);
-            this.fillOnePixelRadioButton.Name = "fillOnePixelRadioButton";
-            this.fillOnePixelRadioButton.Size = new System.Drawing.Size(69, 17);
-            this.fillOnePixelRadioButton.TabIndex = 2;
-            this.fillOnePixelRadioButton.Text = "One pixel";
-            this.fillOnePixelRadioButton.UseVisualStyleBackColor = true;
-            this.fillOnePixelRadioButton.CheckedChanged += new System.EventHandler(this.fillOnePixelRadioButton_CheckedChanged);
+            this.groupBox13.Controls.Add(this.reflectorCheckbox);
+            this.groupBox13.Controls.Add(this.reflectorZButton);
+            this.groupBox13.Controls.Add(this.reflectorZTextBox);
+            this.groupBox13.Location = new System.Drawing.Point(736, 355);
+            this.groupBox13.Name = "groupBox13";
+            this.groupBox13.Size = new System.Drawing.Size(186, 65);
+            this.groupBox13.TabIndex = 23;
+            this.groupBox13.TabStop = false;
+            this.groupBox13.Text = "Reflector";
+            // 
+            // reflectorCheckbox
+            // 
+            this.reflectorCheckbox.AutoSize = true;
+            this.reflectorCheckbox.Location = new System.Drawing.Point(94, 15);
+            this.reflectorCheckbox.Name = "reflectorCheckbox";
+            this.reflectorCheckbox.Size = new System.Drawing.Size(84, 17);
+            this.reflectorCheckbox.TabIndex = 9;
+            this.reflectorCheckbox.Text = "Reflector on";
+            this.reflectorCheckbox.UseVisualStyleBackColor = true;
+            this.reflectorCheckbox.CheckedChanged += new System.EventHandler(this.reflectorCheckbox_CheckedChanged);
+            // 
+            // reflectorZButton
+            // 
+            this.reflectorZButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.reflectorZButton.Location = new System.Drawing.Point(6, 37);
+            this.reflectorZButton.Name = "reflectorZButton";
+            this.reflectorZButton.Size = new System.Drawing.Size(75, 24);
+            this.reflectorZButton.TabIndex = 8;
+            this.reflectorZButton.Text = "Set height";
+            this.reflectorZButton.UseVisualStyleBackColor = true;
+            this.reflectorZButton.Click += new System.EventHandler(this.reflectorZButton_Click);
+            // 
+            // reflectorZTextBox
+            // 
+            this.reflectorZTextBox.Location = new System.Drawing.Point(6, 15);
+            this.reflectorZTextBox.Name = "reflectorZTextBox";
+            this.reflectorZTextBox.Size = new System.Drawing.Size(75, 20);
+            this.reflectorZTextBox.TabIndex = 7;
+            this.reflectorZTextBox.Text = "400";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(934, 546);
+            this.Controls.Add(this.groupBox13);
             this.Controls.Add(this.groupBox12);
             this.Controls.Add(this.groupBox11);
             this.Controls.Add(this.groupBox10);
@@ -610,6 +658,8 @@ namespace GK_P2
             this.groupBox11.PerformLayout();
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
+            this.groupBox13.ResumeLayout(false);
+            this.groupBox13.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -658,6 +708,10 @@ namespace GK_P2
         private System.Windows.Forms.RadioButton fillInterpolationRadioButton;
         private System.Windows.Forms.RadioButton fillEachPixelRadioButton;
         private System.Windows.Forms.RadioButton fillOnePixelRadioButton;
+        private System.Windows.Forms.GroupBox groupBox13;
+        private System.Windows.Forms.Button reflectorZButton;
+        private System.Windows.Forms.TextBox reflectorZTextBox;
+        private System.Windows.Forms.CheckBox reflectorCheckbox;
     }
 }
 

@@ -96,6 +96,13 @@ namespace GK_P2
             this.wrapper.Invalidate();
         }
 
+        private void reflectorZButton_Click(object sender, EventArgs e)
+        {
+            Settings.ReflectorZ = Int32.Parse(this.reflectorZTextBox.Text);
+
+            this.wrapper.Invalidate();
+        }
+
         private void lightAnimationButton_Click(object sender, EventArgs e)
         {
             if (Settings.LightAnimationOn)
@@ -199,6 +206,13 @@ namespace GK_P2
 
         private void wrapper_MouseMove(object sender, MouseEventArgs e)
         {
+            if (Settings.ReflectorOn)
+            {
+                Settings.ReflectorPoint = new Point(e.Location.X - Settings.CENTER_X, e.Location.Y - Settings.CENTER_Y);
+                if (!Settings.LightAnimationOn)
+                    this.wrapper.Invalidate();
+            }
+
             if (this.movingTriangle == null) return;
 
             int dX = e.Location.X - this.lastMovingPoint.X;
@@ -296,7 +310,13 @@ namespace GK_P2
 
         private void cudaModeCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            Settings.CUDAMode = this.cudaModeCheckbox.Checked;
+            Settings.ReflectorOn = this.cudaModeCheckbox.Checked;
+            this.wrapper.Invalidate();
+        }
+
+        private void reflectorCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.ReflectorOn = this.reflectorCheckbox.Checked;
             this.wrapper.Invalidate();
         }
         #endregion
