@@ -5,32 +5,24 @@ namespace GK_P2.Filler
 {
     public class NodeAET
     {
-        public Point a;
-        public Point b;
-        public int yMax;
-        public double x;
-        public double d;
+        public Point A { get; private set; }
+        public Point B { get; private set; }
+        public int YMax { get; private set; }
+        public double X { get; private set; }
+        public double D { get; private set; }
 
-        public NodeAET(Point a, Point b, int yScanLine)
+    public NodeAET(Point a, Point b, int yScanLine)
         {
-            this.a = a;
-            this.b = b;
+            this.A = a;
+            this.B = b;
 
-            LineEquation eq = new LineEquation(a, b);
-
-            this.d = 1 / eq.A;
-            this.yMax = Math.Max(a.Y, b.Y);
-
-            if (eq.verticalLine) this.x = eq.A;
-            else this.x = ((double)yScanLine - eq.B) / eq.A;
+            this.SetX(yScanLine);
         }
 
-        public void UpdateX(int yScanLine)
+        public void SetX(int yScanLine)
         {
-            LineEquation eq = new LineEquation(a, b);
-
-            if (eq.verticalLine) this.x = eq.A;
-            else this.x = ((double)yScanLine - eq.B) / eq.A;
+            var equation = new LineEquation(this.A, this.B);
+            this.X = equation.VerticalLine ? equation.A : ((double)yScanLine - equation.B) / equation.A;
         }
 	}
 }

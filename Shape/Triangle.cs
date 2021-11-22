@@ -86,9 +86,9 @@ namespace GK_P2.Shape
             {
                 case Settings.FillCalculationEnum.EACH_PIXEL:
                     if (bm.GetType() == typeof(CudaBitmap))
-                        callback = (x, y) => ((CudaBitmap)bm).SetPixel(x, y, this.GetPixelStructForPixel(light, x, y, this.Pixels[new Point(x, y)].Z));
+                        callback = (x, y) => ((CudaBitmap)bm).SetPixel(x, y, this.GetPixelStructForPixel(light, x, y, this.GetSavedZ(x, y)));
                     else
-                        callback = (x, y) => bm.SetPixel(x, y, this.GetFillColorForPixel(light, x, y, this.Pixels[new Point(x, y)].Z));
+                        callback = (x, y) => bm.SetPixel(x, y, this.GetFillColorForPixel(light, x, y, this.GetSavedZ(x, y)));
 
                     break;
                 case Settings.FillCalculationEnum.INTERPOLATION:
@@ -104,8 +104,17 @@ namespace GK_P2.Shape
                     break;
             }
 
-            foreach (Point pixel in this.Pixels.Keys)
-                callback(pixel.X, pixel.Y);
+
+            // If some params change during generating we do not want to throw exception
+            try
+            {
+                foreach (Point pixel in this.Pixels.Keys)
+                    callback(pixel.X, pixel.Y);
+            }
+            catch (Exception ex)
+            {
+                
+            }
         }
 
         private int[] GetObjectColor(double x, double y, double z)
@@ -119,7 +128,7 @@ namespace GK_P2.Shape
             double xDistance = Math.Pow(x - Settings.CENTER_X, 2);
             double yDistance = Math.Pow(y - Settings.CENTER_Y, 2);
 
-            return Math.Sqrt(Settings.SPHERE_R * Settings.SPHERE_R - xDistance - yDistance);
+            return Math.Max(0.0, Math.Sqrt(Settings.SPHERE_R * Settings.SPHERE_R - xDistance - yDistance));
         }
 
         private Vector3d GetNormalVersor(int x, int y)
@@ -158,6 +167,16 @@ namespace GK_P2.Shape
                 return this.NormalVectors[p];
 
             return this.GetNormalVersor(x, y);
+        }
+
+        public double GetSavedZ(int x, int y)
+        {
+            Point p = new Point(x, y);
+
+            if (this.Pixels.ContainsKey(p))
+                return this.Pixels[p].Z;
+
+            return this.MidPoint.Z;
         }
 
         private PixelStruct GetPixelStructForPixel(Point light, double x, double y, double z)

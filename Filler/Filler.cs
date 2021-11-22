@@ -12,10 +12,8 @@ namespace GK_P2.Filler
             List<Point> points, 
             Action<int, int> callback
         ) {
-            List<int> ind;
             int yMin, yMax;
-            ind = Filler.SortVertices(points, out yMin, out yMax);
-
+            List<int> ind = Filler.SortVertices(points, out yMin, out yMax);
             List<NodeAET> AET = new List<NodeAET>();
 
             for (int y = yMin; y <= yMax; y++)
@@ -29,61 +27,52 @@ namespace GK_P2.Filler
                         int prev = (ind[i] - 1);
                         if (prev < 0) prev = ind.Count - 1;
 
-                        if (points[prev].Y > points[curr].Y) 
-                            AET.Add(new NodeAET(points[prev], points[curr], y));
-                        else if (points[prev].Y < points[curr].Y)
-                            AET.RemoveAll(node => 
-                                (node.a == points[prev] && node.b == points[curr]) || (node.a == points[curr] && node.b == points[prev])
+                        if (points[prev].Y < points[curr].Y)
+                            AET.RemoveAll(node =>
+                                (node.A == points[prev] && node.B == points[curr]) || (node.A == points[curr] && node.B == points[prev])
                             );
+                        else if (points[prev].Y > points[curr].Y)
+                            AET.Add(new NodeAET(points[prev], points[curr], y));
+
 
                         int next = (ind[i] + 1) % ind.Count;
 
-                        if (points[next].Y > points[curr].Y) 
-                            AET.Add(new NodeAET(points[next], points[curr], y));
-                        else if (points[next].Y < points[curr].Y) 
-                            AET.RemoveAll(node => 
-                                (node.a == points[next] && node.b == points[curr]) || (node.a == points[curr] && node.b == points[next])
+                        if (points[next].Y < points[curr].Y)
+                            AET.RemoveAll(node =>
+                                (node.A == points[next] && node.B == points[curr]) || (node.A == points[curr] && node.B == points[next])
                             );
+                        else if (points[next].Y > points[curr].Y)
+                            AET.Add(new NodeAET(points[next], points[curr], y));
                     }
                 }
 
-                
-                AET.Sort((NodeAET a, NodeAET b) =>
-                {
-                    if (a.x == b.x) return 0;
-                    if (a.x < b.x) return -1;
-                    return 1;
-                });
+
+                AET.Sort((NodeAET a, NodeAET b) => a.X.CompareTo(b.X));
 
                 for (int i = 0; i < AET.Count - 1; i += 2)
                 {
-                    int xMin = (int)AET[i].x;
-                    int xMax = (int)AET[i + 1].x;
+                    int xMin = (int)AET[i].X;
+                    int xMax = (int)AET[i + 1].X;
 
                     for (int x = xMin; x < xMax; x++)
                         callback(x, y);
                 }
 
-                foreach (NodeAET node in AET)
-                    node.UpdateX(y);
+                AET.ForEach(node => node.SetX(y));
             }
         }
 
         private static List<int> SortVertices(List<Point> points, out int yMin, out int yMax)
         {
             List<int> sortedIndexes = new List<int>();
+            
             for (int i = 0; i < points.Count(); i++)
                 sortedIndexes.Add(i);
 
-            sortedIndexes.Sort((int idx1, int idx2) =>
-            {
-                if (points[idx1].Y == points[idx2].Y) return 0;
-                if (points[idx1].Y < points[idx2].Y) return -1;
-                return 1;
-            });
+            sortedIndexes.Sort((int a, int b) => points[a].Y.CompareTo(points[b].Y));
 
             yMin = points[sortedIndexes[0]].Y;
-            yMax = points[sortedIndexes[sortedIndexes.Count - 1]].Y;
+            yMax = points[sortedIndexes.Last()].Y;
 
             return sortedIndexes;
         }
