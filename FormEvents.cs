@@ -310,7 +310,7 @@ namespace GK_P2
 
         private void cudaModeCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            Settings.ReflectorOn = this.cudaModeCheckbox.Checked;
+            Settings.CUDAMode = this.cudaModeCheckbox.Checked;
             this.wrapper.Invalidate();
         }
 
